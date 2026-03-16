@@ -4,12 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>서울내과의원</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 /* ===== Reset & Base ===== */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', sans-serif;
+  font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
   color: #333; line-height: 1.7; background: #fff;
 }
 a { text-decoration: none; color: inherit; }
@@ -39,30 +43,36 @@ img { max-width: 100%; display: block; }
 /* ===== Header ===== */
 .header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: var(--white); box-shadow: var(--shadow);
+  background: var(--white); border-bottom: 1px solid var(--gray-200);
   transition: background .3s;
 }
-.header-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  max-width: 1200px; margin: 0 auto; padding: 0 20px; height: 70px;
+.header-row-top {
+  display: flex; justify-content: center; align-items: center;
+  padding: 14px 20px 10px; border-bottom: 1px solid var(--gray-200);
 }
-.logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.4rem; color: var(--primary-dark); }
-.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; font-weight: 800; }
-.nav-list { display: flex; gap: 8px; }
+.logo { display: inline-block; }
+.logo img { height: 52px; width: auto; }
+.header-row-bottom {
+  display: flex; justify-content: center; align-items: center;
+  max-width: 1200px; margin: 0 auto; padding: 0 20px; height: 48px;
+}
+.nav-list { display: flex; gap: 0; align-items: center; }
 .nav-item { position: relative; }
 .nav-item > a {
-  display: block; padding: 8px 18px; font-size: 0.95rem; font-weight: 600;
-  color: var(--gray-800); border-radius: 8px; transition: all .2s;
+  display: block; padding: 8px 24px; font-size: 0.95rem; font-weight: 600;
+  color: #1a237e; transition: all .2s;
 }
-.nav-item > a:hover, .nav-item > a.active { color: var(--primary); background: var(--primary-bg); }
+.nav-item > a:hover, .nav-item > a.active { color: var(--primary); }
+.nav-divider { color: var(--gray-200); font-size: 0.8rem; user-select: none; line-height: 1; }
 /* Dropdown */
 .dropdown {
-  position: absolute; top: 100%; left: 0; min-width: 200px;
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(8px);
+  min-width: 200px;
   background: var(--white); border-radius: 12px; box-shadow: var(--shadow-lg);
-  padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(8px);
+  padding: 8px 0; opacity: 0; visibility: hidden;
   transition: all .25s ease;
 }
-.nav-item:hover .dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-item:hover .dropdown { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 .dropdown a {
   display: block; padding: 10px 20px; font-size: 0.9rem; color: var(--gray-800);
   transition: all .15s;
@@ -70,26 +80,341 @@ img { max-width: 100%; display: block; }
 .dropdown a:hover { background: var(--primary-bg); color: var(--primary); }
 
 /* Mobile Toggle */
-.nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; background: none; border: none; }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; background: none; border: none; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
 .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--gray-800); border-radius: 2px; transition: all .3s; }
 .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
 .nav-toggle.active span:nth-child(2) { opacity: 0; }
 .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
 
-/* ===== Hero ===== */
-.hero {
-  margin-top: 70px; padding: 100px 20px 80px;
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
-  color: var(--white); text-align: center; position: relative; overflow: hidden;
+/* ===== Slider ===== */
+.slider {
+  margin-top: 125px; position: relative; width: 100%; height: 100vh;
+  min-height: 600px; max-height: 1000px; overflow: hidden; background: #0a0a1a;
 }
-.hero::before {
+.slider-slide {
+  position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; z-index: 0;
+}
+.slider-slide.active { opacity: 1; z-index: 1; }
+.slider-slide img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  animation: kenBurns 12s ease forwards;
+}
+.slider-slide.active img { animation: kenBurns 12s ease forwards; }
+@keyframes kenBurns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+.slider-overlay { position: absolute; inset: 0; z-index: 1; }
+/* Slide content */
+.slide-content {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center;
+  padding: 0 8%; max-width: 1400px;
+}
+.slide-content.pos-left { justify-content: flex-start; }
+.slide-content.pos-center { justify-content: center; }
+.slide-content.pos-right { justify-content: flex-end; }
+.slide-inner { max-width: 620px; }
+.slide-inner.align-center { text-align: center; }
+.slide-inner.align-right { text-align: right; }
+/* Tag */
+.slide-tag {
+  display: inline-block; font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px;
+  padding-bottom: 14px; position: relative;
+}
+.slide-tag.gold { color: #d4af37; }
+.slide-tag.blue { color: var(--primary-light); }
+.slide-tag::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 40px; height: 1.5px;
+}
+.slide-tag.gold::after { background: #d4af37; }
+.slide-tag.blue::after { background: var(--primary-light); }
+.slide-inner.align-center .slide-tag::after { left: 50%; transform: translateX(-50%); }
+.slide-inner.align-right .slide-tag::after { left: auto; right: 0; }
+/* Title */
+.slide-title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 3rem; font-weight: 900; line-height: 1.35;
+  margin-bottom: 24px; letter-spacing: -1px;
+}
+.slide-title .line-deco {
+  display: block; width: 50px; height: 1.5px; margin: 14px 0;
+}
+.slide-inner.align-center .line-deco { margin: 14px auto; }
+.slide-inner.align-right .line-deco { margin-left: auto; }
+.slide-title .num-highlight {
+  font-size: 4rem; font-weight: 900; letter-spacing: -2px;
+}
+.slide-title .check-icon { font-size: 2.2rem; vertical-align: middle; margin-left: 8px; }
+/* Description */
+.slide-desc {
+  font-size: 1.05rem; line-height: 1.9; font-weight: 300;
+  margin-bottom: 32px; opacity: 0.9;
+}
+/* Button */
+.slide-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 32px; border-radius: 0; font-size: 0.88rem;
+  font-weight: 500; letter-spacing: 1px; cursor: pointer;
+  transition: all .3s; background: transparent; text-transform: uppercase;
+}
+.slide-btn.btn-light {
+  color: #fff; border: 1px solid rgba(255,255,255,0.5);
+}
+.slide-btn.btn-light:hover {
+  background: rgba(255,255,255,0.12); border-color: #fff;
+}
+.slide-btn.btn-dark {
+  color: #0d1b3e; border: 1px solid rgba(13,27,62,0.4);
+}
+.slide-btn.btn-dark:hover {
+  background: rgba(13,27,62,0.08); border-color: #0d1b3e;
+}
+.slide-btn .arrow { transition: transform .3s; }
+.slide-btn:hover .arrow { transform: translateX(4px); }
+/* Glass box (slide 2) */
+.slide-glass {
+  background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+  padding: 50px; max-width: 650px;
+}
+/* Text color */
+.text-white { color: #fff; }
+.text-white .line-deco { background: rgba(255,255,255,0.5); }
+.text-dark { color: #0d1b3e; }
+.text-dark .line-deco { background: rgba(13,27,62,0.3); }
+.text-dark .slide-desc { opacity: 0.75; }
+/* Text Animation */
+.slide-inner .slide-tag,
+.slide-inner .slide-title,
+.slide-inner .slide-desc,
+.slide-inner .slide-btn {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.slider-slide.active .slide-inner .slide-tag {
+  opacity: 1; transform: translateY(0); transition-delay: .3s;
+}
+.slider-slide.active .slide-inner .slide-title {
+  opacity: 1; transform: translateY(0); transition-delay: .5s;
+}
+.slider-slide.active .slide-inner .slide-desc {
+  opacity: 1; transform: translateY(0); transition-delay: .7s;
+}
+.slider-slide.active .slide-inner .slide-btn {
+  opacity: 1; transform: translateY(0); transition-delay: .9s;
+}
+/* Arrows */
+.slider-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
+  color: #fff; font-size: 1.2rem; cursor: pointer; transition: all .3s;
+  display: flex; align-items: center; justify-content: center;
+}
+.slider-arrow:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); }
+.slider-arrow.prev { left: 30px; }
+.slider-arrow.next { right: 30px; }
+/* Dots */
+.slider-dots {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  z-index: 10; display: flex; gap: 8px; align-items: center;
+}
+.slider-dot {
+  width: 10px; height: 10px; border-radius: 10px;
+  border: none; background: rgba(255,255,255,0.35);
+  cursor: pointer; transition: all .4s ease; padding: 0;
+}
+.slider-dot.active {
+  background: #fff; width: 32px;
+}
+
+/* ===== Intro Section ===== */
+.intro { padding: 80px 0 60px; background: #fff; }
+.intro-top { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; margin-bottom: 50px; }
+.intro-text { position: relative; }
+.intro-bg-text {
+  position: absolute; top: -20px; left: -10px; font-size: 3.2rem; font-weight: 900;
+  color: rgba(0,0,0,0.04); line-height: 1.15; pointer-events: none;
+  text-transform: uppercase; letter-spacing: 2px; white-space: nowrap;
+}
+.intro-text h3 { font-size: 1.7rem; color: #333; margin-bottom: 20px; line-height: 1.5; position: relative; }
+.intro-text h3 .highlight { color: var(--primary); font-weight: 800; }
+.intro-text p { font-size: 1.05rem; color: var(--gray-600); line-height: 1.9; position: relative; }
+.intro-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.intro-photos img {
+  width: 100%; height: 220px; object-fit: cover; border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.intro-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.intro-card {
+  position: relative; height: 320px; border-radius: 16px; overflow: hidden;
+  cursor: pointer;
+}
+.intro-card img {
+  width: 100%; height: 100%; object-fit: cover; transition: transform .4s, filter .4s;
+}
+.intro-card::after {
   content: ''; position: absolute; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.05) 100%);
+  transition: background .3s;
 }
-.hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
-.hero h1 { font-size: 2.8rem; margin-bottom: 16px; letter-spacing: -0.5px; }
-.hero p { font-size: 1.15rem; opacity: 0.92; margin-bottom: 32px; line-height: 1.8; }
-.hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.intro-card:hover img { transform: scale(1.05); filter: brightness(0.8); }
+.intro-card:hover::after { background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.15) 100%); }
+.intro-card-content {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; z-index: 1; color: #fff;
+}
+.intro-card-content h4 { font-size: 1.3rem; margin-bottom: 8px; }
+.intro-card-content p { font-size: 0.88rem; opacity: 0.9; line-height: 1.6; }
+.intro-card-content .blue-bar {
+  width: 40px; height: 3px; background: var(--primary-light); margin-top: 14px;
+  border-radius: 3px; transition: width .3s;
+}
+.intro-card:hover .blue-bar { width: 60px; }
+
+/* ===== Doctors Section ===== */
+.doctors-section { padding: 80px 0; background: #fff; }
+.doctors-header { text-align: center; margin-bottom: 48px; }
+.doctors-header h2 { font-size: 2rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 10px; }
+.doctors-header p { color: var(--gray-600); font-size: 0.95rem; }
+.doctors-header .bar { width: 50px; height: 3px; background: var(--primary); margin: 16px auto 0; border-radius: 3px; }
+/* Tabs */
+.doc-tabs { display: flex; justify-content: center; gap: 40px; margin-bottom: 48px; }
+.doc-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  cursor: pointer; position: relative; padding-bottom: 8px; transition: all .3s;
+}
+.doc-tab::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 2px; background: var(--primary); transition: width .3s;
+}
+.doc-tab.active::after { width: 60px; }
+.doc-tab-photo {
+  width: 100px; height: 100px; border-radius: 50%; overflow: hidden;
+  border: 3px solid var(--gray-200); transition: all .35s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.doc-tab.active .doc-tab-photo { border-color: var(--primary); box-shadow: 0 4px 20px rgba(21,101,192,0.25); }
+.doc-tab-photo img { width: 100%; height: 100%; object-fit: cover; }
+.doc-tab-name { font-size: 0.95rem; font-weight: 700; color: var(--gray-600); transition: color .3s; }
+.doc-tab.active .doc-tab-name { color: var(--primary-dark); }
+.doc-tab-pos { font-size: 0.78rem; color: var(--gray-600); margin-top: -6px; }
+/* Detail panel */
+.doc-panels { position: relative; min-height: 320px; }
+.doc-panel {
+  display: none; opacity: 0; transition: opacity .4s ease;
+}
+.doc-panel.active { display: grid; opacity: 1; }
+.doc-panel {
+  grid-template-columns: 280px 1fr; gap: 44px; align-items: start;
+  background: var(--gray-50); border-radius: 20px; padding: 40px;
+}
+.doc-panel-photo {
+  width: 100%; aspect-ratio: 3/4; border-radius: 16px; overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.doc-panel-photo img { width: 100%; height: 100%; object-fit: cover; }
+.doc-panel-info {}
+.doc-panel-name {
+  font-size: 1.6rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 4px;
+}
+.doc-panel-pos {
+  font-size: 0.9rem; color: var(--primary); font-weight: 600; margin-bottom: 24px;
+}
+/* Info tabs inside panel */
+.doc-info-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--gray-200); margin-bottom: 20px; }
+.doc-info-tab {
+  padding: 10px 20px; font-size: 0.85rem; font-weight: 600;
+  color: var(--gray-600); cursor: pointer; border-bottom: 2px solid transparent;
+  transition: all .2s; background: none; border-top: none; border-left: none; border-right: none;
+}
+.doc-info-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.doc-info-tab:hover { color: var(--primary-dark); }
+.doc-info-content { display: none; }
+.doc-info-content.active { display: block; }
+.doc-info-content ul {
+  list-style: none; padding: 0;
+}
+.doc-info-content ul li {
+  padding: 8px 0; font-size: 0.88rem; color: var(--gray-800);
+  border-bottom: 1px solid rgba(0,0,0,0.04); display: flex; align-items: flex-start; gap: 10px;
+  line-height: 1.6;
+}
+.doc-info-content ul li:last-child { border-bottom: none; }
+.doc-info-content ul li::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--primary); flex-shrink: 0; margin-top: 8px;
+}
+
+/* ===== News Section ===== */
+.news-section { padding: 80px 0; background: #fff; }
+.news-header { text-align: center; margin-bottom: 50px; position: relative; }
+.news-header h2 { font-size: 2rem; color: var(--primary-dark); margin-bottom: 12px; }
+.news-header p { color: var(--gray-600); font-size: 1rem; }
+.news-header .bar { width: 50px; height: 3px; background: var(--primary); margin: 16px auto 0; border-radius: 3px; }
+.news-bg-text {
+  position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+  font-size: 3.5rem; font-weight: 900; color: rgba(0,0,0,0.03);
+  white-space: nowrap; pointer-events: none; text-transform: uppercase; letter-spacing: 4px;
+}
+.news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.news-card {
+  background: var(--white); border-radius: 16px; overflow: hidden;
+  box-shadow: var(--shadow); border: 1px solid var(--gray-200);
+  transition: all .3s;
+}
+.news-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.news-card-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+.news-card-body { padding: 24px; }
+.news-card-title {
+  font-size: 1.1rem; font-weight: 700; color: var(--primary-dark);
+  margin-bottom: 16px; padding-left: 14px;
+  border-left: 3px solid var(--primary);
+}
+.news-list { display: flex; flex-direction: column; }
+.news-list-item {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid var(--gray-200);
+  cursor: pointer; transition: all .15s;
+}
+.news-list-item:last-child { border-bottom: none; }
+.news-list-item:hover { color: var(--primary); }
+.news-list-item .title {
+  font-size: 0.85rem; color: var(--gray-800); line-height: 1.4;
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.news-list-item:hover .title { color: var(--primary); }
+.news-list-item .date { font-size: 0.75rem; color: var(--gray-600); white-space: nowrap; flex-shrink: 0; }
+/* News card 3 special */
+.news-banner {
+  position: relative; display: block; width: 100%; height: 200px; overflow: hidden;
+}
+.news-banner img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+.news-banner:hover img { transform: scale(1.05); }
+.news-banner-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.1));
+  display: flex; align-items: flex-end; padding: 20px;
+}
+.news-banner-text { color: #fff; font-size: 1.1rem; font-weight: 700; }
+.blog-link {
+  display: flex; align-items: center; gap: 16px;
+  margin: 20px 24px 24px; padding: 20px;
+  border: 2px solid var(--gray-200); border-radius: 12px;
+  transition: all .25s; cursor: pointer;
+}
+.blog-link:hover { border-color: var(--primary-light); background: var(--primary-bg); }
+.blog-icon {
+  width: 48px; height: 48px; border-radius: 10px;
+  background: var(--primary); color: #fff; display: flex;
+  align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; flex-shrink: 0;
+}
+.blog-link-text h4 { font-size: 0.95rem; color: var(--primary-dark); margin-bottom: 2px; }
+.blog-link-text p { font-size: 0.8rem; color: var(--gray-600); }
+
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 14px 32px; border-radius: 50px; font-size: 1rem; font-weight: 600;
@@ -102,21 +427,45 @@ img { max-width: 100%; display: block; }
 .btn-primary { background: var(--primary); color: var(--white); }
 .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(21,101,192,0.3); }
 
-/* ===== Quick Info Bar ===== */
-.quick-info {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
-  max-width: 1000px; margin: -40px auto 0; position: relative; z-index: 10;
-  background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); overflow: hidden;
+/* ===== Partner Hospitals ===== */
+.partner {
+  padding: 30px 0; background: #fff;
+  border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);
+  display: flex; align-items: center; overflow: hidden;
 }
-.quick-item {
-  padding: 28px 20px; text-align: center;
-  border-right: 1px solid var(--gray-200); transition: all .25s; cursor: pointer;
+.partner-label {
+  flex-shrink: 0; padding: 0 36px; font-size: 1.05rem; font-weight: 700;
+  color: var(--primary-dark); border-right: 1px solid var(--gray-200);
+  white-space: nowrap;
 }
-.quick-item:last-child { border-right: none; }
-.quick-item:hover { background: var(--primary-bg); }
-.quick-icon { font-size: 2rem; margin-bottom: 8px; }
-.quick-item h4 { font-size: 0.95rem; color: var(--primary-dark); margin-bottom: 4px; }
-.quick-item p { font-size: 0.8rem; color: var(--gray-600); }
+.partner-track-wrapper {
+  flex: 1; overflow: hidden; position: relative;
+}
+.partner-track-wrapper::before,
+.partner-track-wrapper::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none;
+}
+.partner-track-wrapper::before { left: 0; background: linear-gradient(to right, #fff, transparent); }
+.partner-track-wrapper::after { right: 0; background: linear-gradient(to left, #fff, transparent); }
+.partner-track {
+  display: flex; gap: 28px; width: max-content;
+  animation: partnerScroll 25s linear infinite;
+}
+.partner:hover .partner-track { animation-play-state: paused; }
+@keyframes partnerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.partner-item {
+  flex-shrink: 0; padding: 12px 28px; border: 1px solid var(--gray-200);
+  border-radius: 10px; background: var(--gray-50);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  transition: all .25s; cursor: default;
+}
+.partner-item:hover { border-color: var(--primary-light); background: var(--primary-bg); }
+.partner-item .name-ko { font-size: 0.9rem; font-weight: 700; color: var(--gray-800); white-space: nowrap; }
+.partner-item .name-en { font-size: 0.7rem; color: var(--gray-600); white-space: nowrap; }
+
 
 /* ===== Section Common ===== */
 .section { padding: 80px 0; }
@@ -131,25 +480,160 @@ img { max-width: 100%; display: block; }
 .section-blue .section-header .bar { background: rgba(255,255,255,0.5); }
 
 /* ===== 진료안내 ===== */
+.treat-list { display: flex; flex-direction: column; gap: 0; max-width: 1000px; margin: 0 auto; }
+.treat-item {
+  display: grid; grid-template-columns: 80px 1fr; gap: 0;
+  background: var(--white); border-bottom: 1px solid var(--gray-200);
+  transition: all .35s; position: relative; overflow: hidden;
+}
+.treat-item::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: transparent; transition: background .3s;
+}
+.treat-item:hover::before { background: var(--primary); }
+.treat-item:hover { background: #f8faff; }
+.treat-num {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 700; color: var(--gray-200);
+  font-family: 'Noto Sans KR', sans-serif; transition: color .3s;
+}
+.treat-item:hover .treat-num { color: var(--primary); }
+.treat-body {
+  display: flex; align-items: center; gap: 24px;
+  padding: 32px 28px 32px 0;
+}
+.treat-icon {
+  width: 52px; height: 52px; border-radius: 12px;
+  background: var(--gray-50); border: 1px solid var(--gray-200);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem; color: var(--gray-600); flex-shrink: 0;
+  transition: all .35s;
+}
+.treat-item:hover .treat-icon {
+  background: var(--primary); color: #fff; border-color: var(--primary);
+  transform: scale(1.08);
+}
+.treat-text { flex: 1; }
+.treat-text h3 {
+  font-size: 1.05rem; font-weight: 700; color: var(--gray-800);
+  margin-bottom: 6px; transition: color .3s;
+}
+.treat-item:hover .treat-text h3 { color: var(--primary-dark); }
+.treat-text p { font-size: 0.88rem; color: var(--gray-600); line-height: 1.7; }
+.treat-arrow {
+  font-size: 0.85rem; color: var(--gray-200); transition: all .3s;
+  display: flex; align-items: center; padding-right: 8px;
+}
+.treat-item:hover .treat-arrow { color: var(--primary); transform: translateX(4px); }
+
+/* legacy info-card (진료접수 섹션용) */
 .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .info-card {
   background: var(--white); border-radius: 16px; padding: 36px 28px;
   box-shadow: var(--shadow); transition: all .3s; border: 1px solid var(--gray-200);
 }
 .info-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
-.info-card-icon { width: 56px; height: 56px; border-radius: 14px; background: var(--primary-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 18px; }
+.info-card-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--primary-bg); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 18px; }
 .info-card h3 { font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 12px; }
 .info-card p { font-size: 0.9rem; color: var(--gray-600); line-height: 1.8; }
 
-/* ===== 진료시간 Table ===== */
-.schedule-wrapper { max-width: 600px; margin: 0 auto; }
-.schedule-table { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
-.schedule-table th, .schedule-table td { padding: 14px 20px; text-align: center; }
-.schedule-table thead { background: var(--primary); color: var(--white); }
-.schedule-table tbody tr { border-bottom: 1px solid var(--gray-200); }
-.schedule-table tbody tr:nth-child(even) { background: var(--gray-50); }
-.schedule-table tbody tr:hover { background: var(--primary-bg); }
-.schedule-note { text-align: center; margin-top: 16px; color: var(--gray-600); font-size: 0.9rem; }
+/* ===== 건강검진클리닉 ===== */
+.checkup-clinic { padding: 80px 0; background: #f5f0e8; }
+.checkup-clinic-header { text-align: center; margin-bottom: 50px; }
+.checkup-clinic-header .en {
+  font-size: 0.75rem; letter-spacing: 3px; color: #999;
+  text-transform: lowercase; margin-bottom: 12px;
+}
+.checkup-clinic-header h2 {
+  font-size: 2rem; font-weight: 900; color: #1a1a1a; margin-bottom: 18px;
+}
+.checkup-clinic-header p {
+  font-size: 0.95rem; color: #666; line-height: 1.8; max-width: 600px; margin: 0 auto;
+}
+.checkup-clinic-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  max-width: 1100px; margin: 0 auto;
+}
+.checkup-clinic-card {
+  background: #fff; border-radius: 14px; overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06); transition: all .35s;
+}
+.checkup-clinic-card:hover { transform: translateY(-5px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
+.checkup-clinic-card img {
+  width: 100%; aspect-ratio: 1 / 0.9; object-fit: cover; display: block;
+}
+.checkup-clinic-card .caption {
+  padding: 18px 16px; text-align: center;
+  font-size: 0.9rem; font-weight: 600; color: #2a2a2a; line-height: 1.5;
+}
+
+/* ===== 진료과목 ===== */
+.dept-section {
+  position: relative; padding: 80px 0;
+  background: url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1400&q=60') center/cover no-repeat;
+}
+.dept-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(14,22,42,0.92);
+}
+.dept-section .container { position: relative; z-index: 1; }
+.dept-header { text-align: center; margin-bottom: 50px; }
+.dept-header h2 { font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 10px; }
+.dept-header .en {
+  font-size: 0.72rem; letter-spacing: 3px; color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+}
+.dept-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;
+  max-width: 1000px; margin: 0 auto;
+}
+.dept-card {
+  background: rgba(20,30,55,0.95); padding: 36px 28px;
+  transition: all .35s; cursor: default;
+}
+.dept-card:hover { background: rgba(30,45,75,0.95); }
+.dept-card-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px; transition: all .35s;
+}
+.dept-card:hover .dept-card-icon {
+  border-color: var(--primary-light); background: rgba(66,165,245,0.12);
+}
+.dept-card-icon i { font-size: 1.1rem; color: rgba(255,255,255,0.7); transition: color .3s; }
+.dept-card:hover .dept-card-icon i { color: var(--primary-light); }
+.dept-card h3 {
+  font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 10px;
+}
+.dept-card p {
+  font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.7;
+}
+.dept-card:hover p { color: rgba(255,255,255,0.7); }
+
+/* ===== 진료시간 & 오시는 길 ===== */
+.section-schedule-map { padding: 80px 0; background: #f8f9fa; }
+.schedule-map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+.col-title { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+.col-subtitle { font-size: 0.92rem; color: var(--gray-600); margin-bottom: 24px; }
+/* 진료시간 표 */
+.schedule-table-v2 { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); background: #fff; }
+.schedule-table-v2 th, .schedule-table-v2 td { padding: 13px 16px; text-align: center; font-size: 0.9rem; }
+.schedule-table-v2 thead { background: var(--primary); color: var(--white); }
+.schedule-table-v2 tbody tr { border-bottom: 1px solid var(--gray-200); }
+.schedule-table-v2 tbody tr:hover { background: var(--primary-bg); }
+.schedule-table-v2 .row-sat { background: #E3F2FD; }
+.schedule-table-v2 .row-closed { background: var(--gray-50); color: var(--gray-600); }
+.schedule-table-v2 .row-today { background: #BBDEFB; font-weight: 700; }
+.schedule-table-v2 .row-today td { color: var(--primary-dark); }
+.schedule-note-v2 { margin-top: 14px; font-size: 0.85rem; color: var(--gray-600); }
+/* 오시는 길 */
+.map-iframe-wrap { margin-bottom: 16px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+.map-iframe-wrap iframe { display: block; }
+.map-info-bar { display: flex; flex-direction: column; gap: 10px; }
+.map-info-item { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; color: var(--gray-800); }
+.map-info-icon { font-size: 1.1rem; }
 
 /* ===== 전문클리닉 ===== */
 .clinic-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -206,23 +690,6 @@ img { max-width: 100%; display: block; }
 .doctor-card .position { font-size: 0.85rem; color: var(--primary); font-weight: 600; margin-bottom: 8px; }
 .doctor-card .spec { font-size: 0.82rem; color: var(--gray-600); line-height: 1.6; }
 
-/* ===== 오시는 길 ===== */
-.location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
-.map-placeholder {
-  background: var(--gray-100); border-radius: 16px; height: 340px;
-  display: flex; align-items: center; justify-content: center;
-  border: 2px dashed var(--gray-200); font-size: 1rem; color: var(--gray-600);
-  flex-direction: column; gap: 10px;
-}
-.map-placeholder .icon { font-size: 3rem; }
-.location-info-list { display: flex; flex-direction: column; gap: 20px; }
-.loc-item { display: flex; gap: 16px; align-items: flex-start; }
-.loc-icon {
-  width: 44px; height: 44px; border-radius: 12px; background: var(--primary-bg);
-  display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;
-}
-.loc-item h4 { font-size: 0.95rem; color: var(--primary-dark); margin-bottom: 4px; }
-.loc-item p { font-size: 0.88rem; color: var(--gray-600); line-height: 1.6; }
 
 /* ===== CTA ===== */
 .cta { text-align: center; padding: 70px 20px; background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: var(--white); }
@@ -285,40 +752,68 @@ img { max-width: 100%; display: block; }
 }
 @media (max-width: 768px) {
   .nav-toggle { display: flex; }
+  .header-row-top { position: relative; }
+  .header-row-bottom { display: none; }
   .nav-list {
-    position: fixed; top: 70px; left: 0; right: 0; bottom: 0;
+    position: fixed; top: 77px; left: 0; right: 0; bottom: 0;
     background: var(--white); flex-direction: column; padding: 20px;
-    gap: 4px; transform: translateX(100%); transition: transform .3s;
-    overflow-y: auto;
+    gap: 0; transform: translateX(100%); transition: transform .3s;
+    overflow-y: auto; display: flex;
   }
   .nav-list.open { transform: translateX(0); }
+  .nav-divider { display: none; }
   .dropdown {
-    position: static; opacity: 1; visibility: visible; transform: none;
+    position: static; opacity: 1; visibility: visible;
+    transform: none !important;
     box-shadow: none; padding: 0 0 0 16px; display: none;
   }
   .nav-item.open .dropdown { display: block; }
   .nav-item > a { padding: 12px 16px; font-size: 1rem; }
-  .hero { padding: 70px 20px 60px; }
-  .hero h1 { font-size: 1.8rem; }
-  .hero p { font-size: 1rem; }
-  .quick-info { grid-template-columns: repeat(2, 1fr); margin: -30px 20px 0; }
-  .quick-item { border-bottom: 1px solid var(--gray-200); }
+  .slider { margin-top: 77px; }
+  .partner-label { padding: 0 20px; font-size: 0.9rem; }
+  .news-grid { grid-template-columns: 1fr; }
+  .news-bg-text { font-size: 2rem; }
+  .doc-tabs { gap: 24px; }
+  .doc-tab-photo { width: 76px; height: 76px; }
+  .doc-panel { grid-template-columns: 1fr; gap: 24px; padding: 28px 20px; }
+  .doc-panel-photo { max-width: 220px; margin: 0 auto; }
+  .doc-info-tab { padding: 8px 14px; font-size: 0.8rem; }
+  .intro-top { grid-template-columns: 1fr; gap: 30px; }
+  .intro-bg-text { font-size: 2rem; }
+  .intro-photos img { height: 180px; }
+  .intro-cards { grid-template-columns: 1fr; }
+  .intro-card { height: 260px; }
+  .slider { height: 75vh; min-height: 480px; max-height: 700px; }
+  .slide-content { padding: 0 5%; }
+  .slide-title { font-size: 1.7rem; }
+  .slide-title .num-highlight { font-size: 2.4rem; }
+  .slide-desc { font-size: 0.88rem; }
+  .slide-glass { padding: 30px 24px; }
+  .slider-arrow { width: 42px; height: 42px; font-size: 1rem; }
+  .slider-arrow.prev { left: 12px; }
+  .slider-arrow.next { right: 12px; }
+  .slider-dots { bottom: 24px; }
   .info-grid { grid-template-columns: 1fr; }
+  .checkup-clinic-grid { grid-template-columns: repeat(2, 1fr); }
+  .dept-grid { grid-template-columns: 1fr; }
+  .treat-item { grid-template-columns: 1fr; }
+  .treat-num { padding: 12px 16px 0; justify-content: flex-start; font-size: 0.9rem; }
+  .treat-body { padding: 12px 16px 20px; }
   .clinic-grid { grid-template-columns: repeat(2, 1fr); }
   .checkup-grid { grid-template-columns: 1fr; }
   .about-content { grid-template-columns: 1fr; gap: 30px; }
   .about-image { height: 240px; }
   .doctor-grid { grid-template-columns: 1fr; max-width: 280px; }
-  .location-grid { grid-template-columns: 1fr; }
+  .schedule-map-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; gap: 24px; }
   .section { padding: 60px 0; }
   .section-header h2 { font-size: 1.5rem; }
 }
 @media (max-width: 480px) {
-  .quick-info { grid-template-columns: 1fr; }
   .clinic-grid { grid-template-columns: 1fr; }
   .about-values { grid-template-columns: 1fr; }
   .hero-buttons { flex-direction: column; align-items: center; }
+  .checkup-clinic-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -326,401 +821,546 @@ img { max-width: 100%; display: block; }
 
 <!-- ===== Header ===== -->
 <header class="header" id="header">
-  <div class="header-inner">
+  <div class="header-row-top">
     <a href="#" class="logo">
-      <div class="logo-icon">S</div>
-      서울내과의원
+      <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/60fd14b89dbfe.jpeg" alt="서울내과의원 로고">
     </a>
-    <nav>
-      <button class="nav-toggle" id="navToggle" aria-label="메뉴">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-list" id="navList">
-        <li class="nav-item">
-          <a href="#treatment">진료안내</a>
-          <ul class="dropdown">
-            <li><a href="#subjects">진료과목 및 검사</a></li>
-            <li><a href="#schedule">진료시간</a></li>
-            <li><a href="#reservation">진료접수 및 예약</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a href="#clinic">전문클리닉</a>
-          <ul class="dropdown">
-            <li><a href="#" onclick="openClinic(0);return false;">소화기클리닉</a></li>
-            <li><a href="#" onclick="openClinic(1);return false;">내시경클리닉</a></li>
-            <li><a href="#" onclick="openClinic(2);return false;">간질환클리닉</a></li>
-            <li><a href="#" onclick="openClinic(3);return false;">성인병클리닉</a></li>
-            <li><a href="#" onclick="openClinic(4);return false;">갑상선클리닉</a></li>
-            <li><a href="#" onclick="openClinic(5);return false;">초음파클리닉</a></li>
-            <li><a href="#" onclick="openClinic(6);return false;">금연클리닉</a></li>
-            <li><a href="#" onclick="openClinic(7);return false;">예방접종클리닉</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a href="#checkup">검진센터</a>
-          <ul class="dropdown">
-            <li><a href="#checkup">종합검진</a></li>
-            <li><a href="#checkup">국가검진</a></li>
-            <li><a href="#checkup">5대암검진</a></li>
-            <li><a href="#checkup">채용검진</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a href="#about">병원소개</a>
-          <ul class="dropdown">
-            <li><a href="#about">서울내과</a></li>
-            <li><a href="#doctors">의료진 소개</a></li>
-            <li><a href="#location">오시는 길</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴">
+      <span></span><span></span><span></span>
+    </button>
   </div>
+  <nav class="header-row-bottom">
+    <ul class="nav-list" id="navList">
+      <li class="nav-item">
+        <a href="#treatment">진료안내</a>
+        <ul class="dropdown">
+          <li><a href="#subjects">진료과목 및 검사</a></li>
+          <li><a href="#schedule">진료시간</a></li>
+          <li><a href="#reservation">진료접수 및 예약</a></li>
+        </ul>
+      </li>
+      <li class="nav-divider">|</li>
+      <li class="nav-item">
+        <a href="#clinic">전문클리닉</a>
+        <ul class="dropdown">
+          <li><a href="#" onclick="openClinic(0);return false;">소화기클리닉</a></li>
+          <li><a href="#" onclick="openClinic(1);return false;">내시경클리닉</a></li>
+          <li><a href="#" onclick="openClinic(2);return false;">간질환클리닉</a></li>
+          <li><a href="#" onclick="openClinic(3);return false;">성인병클리닉</a></li>
+          <li><a href="#" onclick="openClinic(4);return false;">갑상선클리닉</a></li>
+          <li><a href="#" onclick="openClinic(5);return false;">초음파클리닉</a></li>
+          <li><a href="#" onclick="openClinic(6);return false;">금연클리닉</a></li>
+          <li><a href="#" onclick="openClinic(7);return false;">예방접종클리닉</a></li>
+        </ul>
+      </li>
+      <li class="nav-divider">|</li>
+      <li class="nav-item">
+        <a href="#checkup-general">종합검진센터</a>
+      </li>
+      <li class="nav-divider">|</li>
+      <li class="nav-item">
+        <a href="#checkup-national">국가건강검진센터</a>
+      </li>
+      <li class="nav-divider">|</li>
+      <li class="nav-item">
+        <a href="#about">병원소개</a>
+        <ul class="dropdown">
+          <li><a href="#about">서울내과</a></li>
+          <li><a href="#doctors">의료진 소개</a></li>
+          <li><a href="#location">오시는 길</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
 </header>
 
-<!-- ===== Hero ===== -->
-<section class="hero" id="home">
-  <div class="hero-content">
-    <h1>건강한 내일을 함께하는<br>서울내과의원</h1>
-    <p>풍부한 임상 경험과 최신 의료 장비를 갖추고<br>환자 한 분 한 분에게 최선의 진료를 약속합니다.</p>
-    <div class="hero-buttons">
-      <a href="#reservation" class="btn btn-white">진료 예약하기</a>
-      <a href="#about" class="btn btn-outline">병원 둘러보기</a>
-    </div>
-  </div>
-</section>
-
-<!-- ===== Quick Info ===== -->
-<div class="quick-info">
-  <a href="#schedule" class="quick-item">
-    <div class="quick-icon">&#128337;</div>
-    <h4>진료시간</h4>
-    <p>평일 09:00 - 18:00</p>
-  </a>
-  <a href="tel:02-000-0000" class="quick-item">
-    <div class="quick-icon">&#128222;</div>
-    <h4>전화 예약</h4>
-    <p>02-000-0000</p>
-  </a>
-  <a href="#location" class="quick-item">
-    <div class="quick-icon">&#128205;</div>
-    <h4>오시는 길</h4>
-    <p>서울시 강남구</p>
-  </a>
-  <a href="#reservation" class="quick-item">
-    <div class="quick-icon">&#128196;</div>
-    <h4>진료접수</h4>
-    <p>온라인 접수 가능</p>
-  </a>
-</div>
-
-<!-- ===== 진료안내 ===== -->
-<section class="section" id="treatment">
-  <div class="container">
-    <div class="section-header fade-in">
-      <h2>진료안내</h2>
-      <p>서울내과의원은 정확한 진단과 맞춤형 치료를 제공합니다</p>
-      <div class="bar"></div>
-    </div>
-    <div class="info-grid" id="subjects">
-      <div class="info-card fade-in">
-        <div class="info-card-icon">&#129657;</div>
-        <h3>내과 진료</h3>
-        <p>감기, 고혈압, 당뇨, 고지혈증, 통풍 등 내과 전반에 걸친 체계적인 진료를 제공합니다.</p>
-      </div>
-      <div class="info-card fade-in">
-        <div class="info-card-icon">&#128300;</div>
-        <h3>내시경 검사</h3>
-        <p>위내시경, 대장내시경 등 숙련된 전문의의 정밀 내시경 검사를 시행합니다.</p>
-      </div>
-      <div class="info-card fade-in">
-        <div class="info-card-icon">&#129656;</div>
-        <h3>초음파 검사</h3>
-        <p>복부 초음파, 갑상선 초음파, 경동맥 초음파 등 다양한 초음파 검사가 가능합니다.</p>
-      </div>
-      <div class="info-card fade-in">
-        <div class="info-card-icon">&#128137;</div>
-        <h3>예방접종</h3>
-        <p>독감, 폐렴, 대상포진, A/B형 간염 등 성인 예방접종을 실시합니다.</p>
-      </div>
-      <div class="info-card fade-in">
-        <div class="info-card-icon">&#129516;</div>
-        <h3>건강검진</h3>
-        <p>국가검진, 종합검진, 채용검진 등 목적에 맞는 맞춤 건강검진을 시행합니다.</p>
-      </div>
-      <div class="info-card fade-in">
-        <div class="info-card-icon">&#128202;</div>
-        <h3>만성질환 관리</h3>
-        <p>고혈압, 당뇨, 이상지질혈증 등 만성질환의 체계적인 관리와 상담을 제공합니다.</p>
+<!-- ===== Slider ===== -->
+<section class="slider" id="home">
+  <!-- 슬라이드 1: AI 내시경 -->
+  <div class="slider-slide active">
+    <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/1cede447a87a0.png" alt="AI 내시경">
+    <div class="slider-overlay" style="background: linear-gradient(to right, rgba(45,10,80,0.85) 0%, rgba(75,0,130,0.5) 45%, transparent 100%);"></div>
+    <div class="slide-content pos-left">
+      <div class="slide-inner text-white">
+        <span class="slide-tag gold">AI TECHNOLOGY</span>
+        <h2 class="slide-title">최첨단 인공지능 AI<span class="line-deco" style="background:rgba(255,255,255,0.4);"></span>위·대장내시경 장비 도입</h2>
+        <p class="slide-desc">서울내과에서는 경험이 풍부한 내시경 전문의가<br>인공지능과 함께 더 정밀하고 정확하게 검사를 진행합니다.</p>
+        <a href="#clinic" class="slide-btn btn-light">자세히 보기 <span class="arrow">&rarr;</span></a>
       </div>
     </div>
   </div>
-</section>
-
-<!-- ===== 진료시간 ===== -->
-<section class="section section-alt" id="schedule">
-  <div class="container">
-    <div class="section-header fade-in">
-      <h2>진료시간</h2>
-      <p>환자분들의 편의를 위해 안내드립니다</p>
-      <div class="bar"></div>
-    </div>
-    <div class="schedule-wrapper fade-in">
-      <table class="schedule-table">
-        <thead>
-          <tr><th>구분</th><th>진료시간</th><th>비고</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>평일</strong></td><td>09:00 - 18:00</td><td>점심 13:00 - 14:00</td></tr>
-          <tr><td><strong>토요일</strong></td><td>09:00 - 13:00</td><td>점심시간 없음</td></tr>
-          <tr><td><strong>일요일</strong></td><td colspan="2">휴진</td></tr>
-          <tr><td><strong>공휴일</strong></td><td colspan="2">휴진</td></tr>
-        </tbody>
-      </table>
-      <p class="schedule-note">* 접수는 진료 마감 30분 전까지 가능합니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 진료접수 및 예약 ===== -->
-<section class="section" id="reservation">
-  <div class="container">
-    <div class="section-header fade-in">
-      <h2>진료접수 및 예약</h2>
-      <p>편리하게 진료를 예약하세요</p>
-      <div class="bar"></div>
-    </div>
-    <div class="info-grid fade-in" style="max-width:900px;margin:0 auto;">
-      <div class="info-card" style="text-align:center;">
-        <div class="info-card-icon" style="margin:0 auto 18px;">&#128222;</div>
-        <h3>전화 예약</h3>
-        <p style="font-size:1.3rem;font-weight:700;color:var(--primary);margin:8px 0;">02-000-0000</p>
-        <p>평일 09:00 - 18:00<br>토요일 09:00 - 13:00</p>
-      </div>
-      <div class="info-card" style="text-align:center;">
-        <div class="info-card-icon" style="margin:0 auto 18px;">&#127970;</div>
-        <h3>방문 접수</h3>
-        <p>진료 시간 내 방문하시면<br>접수 후 바로 진료 가능합니다.<br>초진 시 신분증을 지참해주세요.</p>
-      </div>
-      <div class="info-card" style="text-align:center;">
-        <div class="info-card-icon" style="margin:0 auto 18px;">&#128241;</div>
-        <h3>온라인 예약</h3>
-        <p>네이버 예약 또는<br>카카오톡 채널을 통해<br>간편하게 예약하실 수 있습니다.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 전문클리닉 ===== -->
-<section class="section section-alt" id="clinic">
-  <div class="container">
-    <div class="section-header fade-in">
-      <h2>전문클리닉</h2>
-      <p>각 분야 전문의가 체계적으로 진료합니다</p>
-      <div class="bar"></div>
-    </div>
-    <div class="clinic-grid">
-      <div class="clinic-card fade-in" onclick="openClinic(0)">
-        <div class="icon">&#129481;</div>
-        <h3>소화기클리닉</h3>
-        <p>위장질환, 소화불량, 역류성 식도염 등</p>
-      </div>
-      <div class="clinic-card fade-in" onclick="openClinic(1)">
-        <div class="icon">&#128300;</div>
-        <h3>내시경클리닉</h3>
-        <p>위·대장 내시경, 용종 절제술</p>
-      </div>
-      <div class="clinic-card fade-in" onclick="openClinic(2)">
-        <div class="icon">&#129516;</div>
-        <h3>간질환클리닉</h3>
-        <p>간염, 지방간, 간경변 관리</p>
-      </div>
-      <div class="clinic-card fade-in" onclick="openClinic(3)">
-        <div class="icon">&#129657;</div>
-        <h3>성인병클리닉</h3>
-        <p>고혈압, 당뇨, 고지혈증 관리</p>
-      </div>
-      <div class="clinic-card fade-in" onclick="openClinic(4)">
-        <div class="icon">&#129656;</div>
-        <h3>갑상선클리닉</h3>
-        <p>갑상선 기능 검사 및 초음파</p>
-      </div>
-      <div class="clinic-card fade-in" onclick="openClinic(5)">
-        <div class="icon">&#128187;</div>
-        <h3>초음파클리닉</h3>
-        <p>복부, 갑상선, 경동맥 초음파</p>
-      </div>
-      <div class="clinic-card fade-in" onclick="openClinic(6)">
-        <div class="icon">&#128684;</div>
-        <h3>금연클리닉</h3>
-        <p>금연 상담 및 약물 치료</p>
-      </div>
-      <div class="clinic-card fade-in" onclick="openClinic(7)">
-        <div class="icon">&#128137;</div>
-        <h3>예방접종클리닉</h3>
-        <p>성인 예방접종 전문</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 검진센터 ===== -->
-<section class="section section-blue" id="checkup">
-  <div class="container">
-    <div class="section-header fade-in">
-      <h2>검진센터</h2>
-      <p>정밀하고 체계적인 건강검진으로 질병을 조기에 발견합니다</p>
-      <div class="bar"></div>
-    </div>
-    <div class="checkup-grid">
-      <div class="checkup-card fade-in">
-        <div class="icon">&#127942;</div>
-        <div>
-          <h3>종합검진</h3>
-          <p>기본 혈액검사부터 내시경, 초음파, 심전도까지 전신을 아우르는 프리미엄 종합검진 프로그램</p>
-        </div>
-      </div>
-      <div class="checkup-card fade-in">
-        <div class="icon">&#127963;</div>
-        <div>
-          <h3>국가검진</h3>
-          <p>국민건강보험공단 지정 검진기관으로 일반건강검진, 생애전환기검진을 시행합니다</p>
-        </div>
-      </div>
-      <div class="checkup-card fade-in">
-        <div class="icon">&#128269;</div>
-        <div>
-          <h3>5대암검진</h3>
-          <p>위암, 대장암, 간암, 유방암, 자궁경부암 국가암검진 프로그램 운영</p>
-        </div>
-      </div>
-      <div class="checkup-card fade-in">
-        <div class="icon">&#128188;</div>
-        <div>
-          <h3>채용검진</h3>
-          <p>취업 및 입사를 위한 채용 건강검진, 당일 결과 발급 가능</p>
+  <!-- 슬라이드 2: 대학병원 연계 -->
+  <div class="slider-slide">
+    <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/8562e4cee945d.png" alt="대학병원 연계">
+    <div class="slider-overlay" style="background: rgba(0,0,0,0.55);"></div>
+    <div class="slide-content pos-center">
+      <div class="slide-glass">
+        <div class="slide-inner align-center text-white">
+          <span class="slide-tag gold">MEDICAL NETWORK</span>
+          <h2 class="slide-title">국내 유수의<br>대학병원과 연계<span class="line-deco" style="background:#d4af37; margin:18px auto;"></span></h2>
+          <p class="slide-desc">대학병원과 협진체계를 구축하고 있어 진료가 필요한 경우<br>신속하게 연계되어 치료가 가능합니다.</p>
+          <a href="#about" class="slide-btn btn-light">자세히 보기 <span class="arrow">&rarr;</span></a>
         </div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:40px;" class="fade-in">
-      <p style="opacity:0.9;margin-bottom:20px;">검진센터는 최신 장비와 쾌적한 환경을 갖추고 있습니다</p>
-      <a href="#reservation" class="btn btn-white">검진 예약하기</a>
+  </div>
+  <!-- 슬라이드 3: 건강검진 -->
+  <div class="slider-slide">
+    <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/381ba8bcf5d83.png" alt="건강검진">
+    <div class="slider-overlay" style="background: linear-gradient(to left, rgba(0,10,30,0.82) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);"></div>
+    <div class="slide-content pos-right">
+      <div class="slide-inner align-right text-white">
+        <span class="slide-tag gold">HEALTH CHECKUP</span>
+        <h2 class="slide-title">대학병원 수준의<br>건강검진 제공!</h2>
+        <p class="slide-desc"><span class="num-highlight">3</span>명의 전문의로 구성된 의료진이 대학병원급 최신<br>검사 기기와 장비로 정확한 검사와 진단을 합니다.</p>
+        <a href="#checkup" class="slide-btn btn-light">자세히 보기 <span class="arrow">&rarr;</span></a>
+      </div>
     </div>
+  </div>
+  <!-- 슬라이드 4: 소독 시스템 -->
+  <div class="slider-slide">
+    <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/42a42b7b04456.png" alt="소독 시스템">
+    <div class="slider-overlay" style="background: linear-gradient(to right, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.1) 100%);"></div>
+    <div class="slide-content pos-left">
+      <div class="slide-inner text-dark">
+        <span class="slide-tag blue">STERILIZATION SYSTEM</span>
+        <h2 class="slide-title">철저한 소독과<br>방역 시스템 완비 <span class="check-icon">&#10003;</span></h2>
+        <p class="slide-desc">감염예방을 위해 검사기기 소독·세척 시스템을 완비하고<br>정기적으로 원내 방역을 실시하고 있습니다.</p>
+        <a href="#about" class="slide-btn btn-dark">자세히 보기 <span class="arrow">&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+  <!-- 슬라이드 5: 편안한 시설 -->
+  <div class="slider-slide">
+    <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/68fc69875add9.png" alt="편안한 시설">
+    <div class="slider-overlay" style="background: rgba(180,220,250,0.35);"></div>
+    <div class="slide-content pos-center">
+      <div class="slide-inner align-center text-dark">
+        <span class="slide-tag blue">PATIENT FIRST</span>
+        <h2 class="slide-title">편안하고<br>믿을 수 있습니다!<span class="line-deco" style="background:var(--primary); width:60px; height:3px; margin:18px auto; border-radius:2px;"></span></h2>
+        <p class="slide-desc">깨끗하고 쾌적한 시설에서 검진 전담 직원의 친절한<br>1:1 안내 서비스로 편안하게 검사가 진행됩니다.</p>
+        <a href="#about" class="slide-btn btn-dark">자세히 보기 <span class="arrow">&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+  <!-- Navigation -->
+  <button class="slider-arrow prev" onclick="changeSlide(-1)">&#10094;</button>
+  <button class="slider-arrow next" onclick="changeSlide(1)">&#10095;</button>
+  <div class="slider-dots">
+    <button class="slider-dot active" onclick="goToSlide(0)"></button>
+    <button class="slider-dot" onclick="goToSlide(1)"></button>
+    <button class="slider-dot" onclick="goToSlide(2)"></button>
+    <button class="slider-dot" onclick="goToSlide(3)"></button>
+    <button class="slider-dot" onclick="goToSlide(4)"></button>
   </div>
 </section>
 
-<!-- ===== 병원소개 ===== -->
-<section class="section" id="about">
+<!-- ===== Intro Section ===== -->
+<section class="intro">
   <div class="container">
-    <div class="section-header fade-in">
-      <h2>서울내과의원 소개</h2>
-      <p>신뢰와 정성으로 환자를 돌봅니다</p>
-      <div class="bar"></div>
+    <div class="intro-top fade-in">
+      <div class="intro-text">
+        <div class="intro-bg-text">HEPATOGASTRO<br>ENTEROLOGY<br>CLINIC OF SEOUL</div>
+        <h3><span class="highlight">서울내과의원</span>의 꿈은</h3>
+        <p>개인의 건강한 삶을 통해 안정되고 행복한 가정,<br>따뜻한 사회와 아름다운 세상을 함께 만드는 것입니다!</p>
+      </div>
+      <div class="intro-photos">
+        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/60fd14b89dbfe.jpeg" alt="서울내과의원 사진 1">
+        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/60fd14b89dbfe.jpeg" alt="서울내과의원 사진 2">
+      </div>
     </div>
-    <div class="about-content fade-in">
-      <div class="about-text">
-        <h3>환자 중심의 진료,<br>건강한 삶의 동반자</h3>
-        <p>서울내과의원은 내과 전문의가 직접 진료하는 1차 의료기관으로, 정확한 진단과 맞춤형 치료를 제공합니다.</p>
-        <p>최신 내시경 장비와 초음파 장비를 갖추고 있으며, 종합검진부터 만성질환 관리까지 체계적인 건강관리 서비스를 제공하고 있습니다.</p>
-        <div class="about-values">
-          <div class="about-value">
-            <div class="num">20+</div>
-            <div class="label">진료 경력(년)</div>
-          </div>
-          <div class="about-value">
-            <div class="num">50,000+</div>
-            <div class="label">누적 진료 환자</div>
-          </div>
-          <div class="about-value">
-            <div class="num">8</div>
-            <div class="label">전문 클리닉</div>
-          </div>
+    <div class="intro-cards fade-in">
+      <div class="intro-card">
+        <img src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=600&q=80" alt="전문 클리닉">
+        <div class="intro-card-content">
+          <h4>전문 클리닉</h4>
+          <p>소화기클리닉</p>
+          <div class="blue-bar"></div>
         </div>
       </div>
-      <div class="about-image">&#127973;</div>
+      <div class="intro-card">
+        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80" alt="종합검진">
+        <div class="intro-card-content">
+          <h4>종합검진</h4>
+          <p>주요 암 조기진단을 위한 다양하고 합리적인 맞춤형 건강검진</p>
+          <div class="blue-bar"></div>
+        </div>
+      </div>
+      <div class="intro-card">
+        <img src="https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=600&q=80" alt="국가건강검진">
+        <div class="intro-card-content">
+          <h4>국가건강검진</h4>
+          <p>국민건강보험공단에서 시행하는 6대 암검진과 일반검진 프로그램</p>
+          <div class="blue-bar"></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 의료진 ===== -->
-<section class="section section-alt" id="doctors">
+<!-- ===== 의료진 소개 ===== -->
+<section class="doctors-section" id="doctors">
   <div class="container">
-    <div class="section-header fade-in">
+    <div class="doctors-header fade-in">
       <h2>의료진 소개</h2>
-      <p>풍부한 경험의 전문 의료진이 함께합니다</p>
+      <p>서울내과의원의 전문 의료진을 소개합니다</p>
       <div class="bar"></div>
     </div>
-    <div class="doctor-grid fade-in">
-      <div class="doctor-card">
-        <div class="doctor-photo">&#129489;&#8205;&#9877;&#65039;</div>
-        <h3>김서울 원장</h3>
-        <p class="position">내과 전문의 / 대표원장</p>
-        <p class="spec">소화기내과 전공<br>전 삼성서울병원 내과 전임의<br>대한소화기학회 정회원</p>
+    <!-- 의사 탭 버튼 -->
+    <div class="doc-tabs fade-in">
+      <div class="doc-tab active" onclick="selectDoctor(0)">
+        <div class="doc-tab-photo">
+          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/f85376b28623c.png" alt="이재광 원장">
+        </div>
+        <span class="doc-tab-name">이재광</span>
+        <span class="doc-tab-pos">대표원장</span>
       </div>
-      <div class="doctor-card">
-        <div class="doctor-photo">&#129489;&#8205;&#9877;&#65039;</div>
-        <h3>이건강 부원장</h3>
-        <p class="position">내과 전문의</p>
-        <p class="spec">내분비내과 전공<br>전 서울아산병원 내과 전임의<br>대한내분비학회 정회원</p>
+      <div class="doc-tab" onclick="selectDoctor(1)">
+        <div class="doc-tab-photo">
+          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/7f6abd2a3533f.png" alt="이주영 과장">
+        </div>
+        <span class="doc-tab-name">이주영</span>
+        <span class="doc-tab-pos">내과2 과장</span>
       </div>
-      <div class="doctor-card">
-        <div class="doctor-photo">&#129489;&#8205;&#9877;&#65039;</div>
-        <h3>박진심 과장</h3>
-        <p class="position">내과 전문의</p>
-        <p class="spec">순환기내과 전공<br>전 세브란스병원 내과 전임의<br>대한심장학회 정회원</p>
+      <div class="doc-tab" onclick="selectDoctor(2)">
+        <div class="doc-tab-photo">
+          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/2acb7336f72a5.png" alt="김송이 과장">
+        </div>
+        <span class="doc-tab-name">김송이</span>
+        <span class="doc-tab-pos">과장</span>
+      </div>
+    </div>
+    <!-- 상세 패널 -->
+    <div class="doc-panels fade-in">
+      <!-- 이재광 원장 -->
+      <div class="doc-panel active" id="docPanel0">
+        <div class="doc-panel-photo">
+          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/f85376b28623c.png" alt="이재광 원장">
+        </div>
+        <div class="doc-panel-info">
+          <div class="doc-panel-name">이재광</div>
+          <div class="doc-panel-pos">원장 (대표원장)</div>
+          <div class="doc-info-tabs">
+            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc0')">학력·경력</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc0')">학회회원</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc0')">학위</button>
+          </div>
+          <div class="doc-info-contents" id="doc0">
+            <div class="doc-info-content active">
+              <ul>
+                <li>서울대학교 의과대학 졸업</li>
+                <li>인제대학교 서울백병원 인턴수료</li>
+                <li>인제대학교 서울백병원 내과레지던트 수료</li>
+                <li>제천 서울병원 내과과장 역임</li>
+                <li>구 덕산병원(오류동) 내과과장 역임</li>
+                <li>서안복음병원 내과과장 역임</li>
+                <li>현 서울내과 대표원장</li>
+              </ul>
+            </div>
+            <div class="doc-info-content">
+              <ul>
+                <li>대한 고혈압학회</li>
+                <li>대한 내분비학회</li>
+                <li>대한 소화기 내시경 학회</li>
+                <li>대한 의사 협회</li>
+              </ul>
+            </div>
+            <div class="doc-info-content">
+              <ul>
+                <li>서울대학교 의과대학 석사</li>
+                <li>"신증후 출혈열의 질병사적 고찰"</li>
+                <li>서울대학교 의과대학 박사 수료</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 이주영 과장 -->
+      <div class="doc-panel" id="docPanel1">
+        <div class="doc-panel-photo">
+          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/7f6abd2a3533f.png" alt="이주영 과장">
+        </div>
+        <div class="doc-panel-info">
+          <div class="doc-panel-name">이주영</div>
+          <div class="doc-panel-pos">내과2 과장</div>
+          <div class="doc-info-tabs">
+            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc1')">학력</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc1')">경력</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc1')">학회회원</button>
+          </div>
+          <div class="doc-info-contents" id="doc1">
+            <div class="doc-info-content active">
+              <ul>
+                <li>울산대학교 의과대학 졸업</li>
+                <li>성애병원 수련의 수료</li>
+                <li>성애병원 내과 전공의 수료</li>
+                <li>아주대병원 소화기내과 임상강사 수료</li>
+                <li>내과 전문의</li>
+              </ul>
+            </div>
+            <div class="doc-info-content">
+              <ul>
+                <li>제66회 대한소화기내시경학회 추계학술대회 우수연제상 수상</li>
+              </ul>
+            </div>
+            <div class="doc-info-content">
+              <ul>
+                <li>대한내과학회 평생회원</li>
+                <li>대한소화기학회 평생회원</li>
+                <li>대한소화기내시경학회 평생회원</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 김송이 과장 -->
+      <div class="doc-panel" id="docPanel2">
+        <div class="doc-panel-photo">
+          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/2acb7336f72a5.png" alt="김송이 과장">
+        </div>
+        <div class="doc-panel-info">
+          <div class="doc-panel-name">김송이</div>
+          <div class="doc-panel-pos">과장</div>
+          <div class="doc-info-tabs">
+            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc2')">학력</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc2')">학회회원</button>
+          </div>
+          <div class="doc-info-contents" id="doc2">
+            <div class="doc-info-content active">
+              <ul>
+                <li>연세대학교 의과대학 졸업</li>
+                <li>연세대학교 의과대학원 졸업</li>
+                <li>연세대학교 의과대학원 석사 수료</li>
+                <li>가톨릭 중앙의료원 인턴 수료</li>
+                <li>원주세브란스기독병원 내과 전공의 수료</li>
+              </ul>
+            </div>
+            <div class="doc-info-content">
+              <ul>
+                <li>대한내과학회 정회원</li>
+                <li>대한내분비학회 정회원</li>
+                <li>대한당뇨병학회 정회원</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 오시는 길 ===== -->
-<section class="section" id="location">
+<!-- ===== 새로운 소식 ===== -->
+<section class="news-section" id="news-section">
   <div class="container">
-    <div class="section-header fade-in">
-      <h2>오시는 길</h2>
-      <p>편리한 교통과 쾌적한 환경</p>
+    <div class="news-header fade-in">
+      <div class="news-bg-text">SEOUL INTERNAL NEWS</div>
+      <h2>새로운 소식</h2>
+      <p>꼭 알아야 할 공지사항과 뉴스 및 생활에 필요한 건강정보를 알려드립니다.</p>
       <div class="bar"></div>
     </div>
-    <div class="location-grid fade-in">
-      <div class="map-placeholder">
-        <div class="icon">&#128506;</div>
-        <p>지도 영역<br><span style="font-size:0.8rem;">(카카오맵/네이버지도 API 연동 위치)</span></p>
+    <div class="news-grid fade-in">
+      <!-- 카드 1: 공지사항 -->
+      <div class="news-card">
+        <img class="news-card-img" src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80" alt="공지사항">
+        <div class="news-card-body">
+          <div class="news-card-title">| 공지사항</div>
+          <div class="news-list">
+            <a href="#notice" class="news-list-item">
+              <span class="title">2025년 1월 27일(임시공휴일) 정상 진료 안...</span>
+              <span class="date">2025.01.10</span>
+            </a>
+            <a href="#notice" class="news-list-item">
+              <span class="title">2025~2026 비급여 항목 안내</span>
+              <span class="date">2025.07.11</span>
+            </a>
+            <a href="#notice" class="news-list-item">
+              <span class="title">2023~2024절기 인플루엔자(독감) 접종 안내</span>
+              <span class="date">2023.09.09</span>
+            </a>
+            <a href="#notice" class="news-list-item">
+              <span class="title">2023년 10월 2일, 임시공휴일 휴진 안내</span>
+              <span class="date">2023.09.02</span>
+            </a>
+          </div>
+        </div>
       </div>
-      <div class="location-info-list">
-        <div class="loc-item">
-          <div class="loc-icon">&#128205;</div>
-          <div>
-            <h4>주소</h4>
-            <p>서울특별시 강남구 테헤란로 123, 4층<br>(역삼동, OO빌딩)</p>
+      <!-- 카드 2: 건강상식 -->
+      <div class="news-card">
+        <img class="news-card-img" src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=600&q=80" alt="건강상식">
+        <div class="news-card-body">
+          <div class="news-card-title">| 건강상식</div>
+          <div class="news-list">
+            <a href="#health" class="news-list-item">
+              <span class="title">입 냄새 공포! 편하게 말하고 싶어요!</span>
+              <span class="date">2021.04.20</span>
+            </a>
+            <a href="#health" class="news-list-item">
+              <span class="title">방귀가 자주 나와요</span>
+              <span class="date">2021.04.10</span>
+            </a>
+            <a href="#health" class="news-list-item">
+              <span class="title">잘 먹고 잘 싸는 법!</span>
+              <span class="date">2020.09.22</span>
+            </a>
+            <a href="#health" class="news-list-item">
+              <span class="title">'몸짱'이 되자!!!</span>
+              <span class="date">2020.09.17</span>
+            </a>
           </div>
         </div>
-        <div class="loc-item">
-          <div class="loc-icon">&#128652;</div>
-          <div>
-            <h4>지하철</h4>
-            <p>2호선 역삼역 3번 출구 도보 3분<br>분당선 선릉역 1번 출구 도보 7분</p>
+      </div>
+      <!-- 카드 3: 뉴스/블로그 -->
+      <div class="news-card">
+        <a href="#news" class="news-banner">
+          <img src="https://images.unsplash.com/photo-1504439468489-c8920d796a29?w=600&q=80" alt="뉴스">
+          <div class="news-banner-overlay">
+            <span class="news-banner-text">서울내과의원 뉴스 &gt;</span>
           </div>
-        </div>
-        <div class="loc-item">
-          <div class="loc-icon">&#128653;</div>
-          <div>
-            <h4>버스</h4>
-            <p>간선: 146, 341, 360<br>지선: 3412, 4412</p>
+        </a>
+        <a href="#" target="_blank" class="blog-link">
+          <div class="blog-icon">B</div>
+          <div class="blog-link-text">
+            <h4>속 편한 건강이야기</h4>
+            <p>서울내과의원 의료전문 정보 블로그</p>
           </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 협력병원 ===== -->
+<section class="partner">
+  <div class="partner-label">협력병원</div>
+  <div class="partner-track-wrapper">
+    <div class="partner-track" id="partnerTrack">
+      <div class="partner-item"><span class="name-ko">고려대학교의료원</span><span class="name-en">KOREA UNIVERSITY MEDICAL CENTER</span></div>
+      <div class="partner-item"><span class="name-ko">서울대학교병원</span><span class="name-en">SNUH</span></div>
+      <div class="partner-item"><span class="name-ko">삼성서울병원</span><span class="name-en">SAMSUNG</span></div>
+      <div class="partner-item"><span class="name-ko">서울아산병원</span><span class="name-en">Asan Medical Center</span></div>
+      <div class="partner-item"><span class="name-ko">세브란스병원</span><span class="name-en">SEVERANCE HOSPITAL</span></div>
+      <div class="partner-item"><span class="name-ko">고려대학교의료원</span><span class="name-en">KOREA UNIVERSITY MEDICAL CENTER</span></div>
+      <div class="partner-item"><span class="name-ko">서울대학교병원</span><span class="name-en">SNUH</span></div>
+      <div class="partner-item"><span class="name-ko">삼성서울병원</span><span class="name-en">SAMSUNG</span></div>
+      <div class="partner-item"><span class="name-ko">서울아산병원</span><span class="name-en">Asan Medical Center</span></div>
+      <div class="partner-item"><span class="name-ko">세브란스병원</span><span class="name-en">SEVERANCE HOSPITAL</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 건강검진클리닉 ===== -->
+<section class="checkup-clinic" id="checkup-general">
+  <div class="container">
+    <div class="checkup-clinic-header fade-in">
+      <p class="en">best internal medicine &amp; health checkup center</p>
+      <h2>서울내과 부설 건강검진클리닉</h2>
+      <p>숙련된 의료진과 우수한 의료장비를 기반으로 단순한 검진이 아닌<br>검진, 진단, 치료 및 예방까지 접목한 건강검진의 새로운 패러다임을 제시합니다.</p>
+    </div>
+    <div class="checkup-clinic-grid fade-in">
+      <div class="checkup-clinic-card">
+        <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?w=500&q=80" alt="의료장비">
+        <div class="caption">고성능의 우수한 의료장비</div>
+      </div>
+      <div class="checkup-clinic-card">
+        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=80" alt="의료진 상담">
+        <div class="caption">숙련된 의료진의 정확한 진단과 치료</div>
+      </div>
+      <div class="checkup-clinic-card">
+        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=500&q=80" alt="원스톱 서비스">
+        <div class="caption">진단에서 치료까지 원스톱 서비스</div>
+      </div>
+      <div class="checkup-clinic-card">
+        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80" alt="건강관리">
+        <div class="caption">평생 건강관리 프로그램</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 진료과목 ===== -->
+<section class="dept-section" id="checkup-national">
+  <div class="container">
+    <div class="dept-header fade-in">
+      <h2>서울내과 진료과목</h2>
+      <p class="en">SEOUL INTERNAL MEDICINE &amp; HEALTH CHECKUP CENTER</p>
+    </div>
+    <div class="dept-grid fade-in">
+      <div class="dept-card">
+        <div class="dept-card-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+        <h3>개인종합건강검진</h3>
+        <p>베이직 검진, 스탠다드 검진, 클래식 검진, 정밀 종합검진</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-card-icon"><i class="fa-solid fa-file-medical"></i></div>
+        <h3>국민건강보험공단검진</h3>
+        <p>일반검진, 5대 암 검진</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-card-icon"><i class="fa-solid fa-building"></i></div>
+        <h3>기업/단체 건강검진</h3>
+        <p>건강한 직원들이 건강한 기업을 만듭니다. 내원하는 기업의 구성원 모두가 건강할 수 있도록 언제나 최선을 다하겠습니다.</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-card-icon"><i class="fa-solid fa-microscope"></i></div>
+        <h3>소화기내시경</h3>
+        <p>위, 대장내시경, 설사약 없는 대장내시경, 당일 용종절제술</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-card-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+        <h3>영상의학</h3>
+        <p>다중채널CT, 정밀 초음파 (복부/갑상선/경동맥/유방/심장), 전신골밀도검사(DEXA), 유방촬영검사, 일반 X-ray 검사</p>
+      </div>
+      <div class="dept-card">
+        <div class="dept-card-icon"><i class="fa-solid fa-pills"></i></div>
+        <h3>내과전문 진료</h3>
+        <p>당뇨병, 고혈압, 고지혈증 등 만성질환, 소화기질환, 호흡기질환, 심장질환, 내분비질환, 간질환, 신장질환 등 내과 질환 전반의 진단과 치료</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 진료시간 & 오시는 길 ===== -->
+<section class="section-schedule-map" id="schedule">
+  <div class="container">
+    <div class="schedule-map-grid fade-in">
+      <!-- 왼쪽: 진료시간 -->
+      <div class="schedule-col">
+        <h3 class="col-title">진료시간</h3>
+        <p class="col-subtitle">환자분들의 편의를 위해 안내드립니다</p>
+        <table class="schedule-table-v2" id="scheduleTable">
+          <thead>
+            <tr><th>구분</th><th>진료시간</th><th>비고</th></tr>
+          </thead>
+          <tbody>
+            <tr data-day="1"><td>월요일</td><td>09:00 - 18:00</td><td>점심 13:00 - 14:00</td></tr>
+            <tr data-day="2"><td>화요일</td><td>09:00 - 18:00</td><td>점심 13:00 - 14:00</td></tr>
+            <tr data-day="3"><td>수요일</td><td>09:00 - 18:00</td><td>점심 13:00 - 14:00</td></tr>
+            <tr data-day="4"><td>목요일</td><td>09:00 - 18:00</td><td>점심 13:00 - 14:00</td></tr>
+            <tr data-day="5"><td>금요일</td><td>09:00 - 18:00</td><td>점심 13:00 - 14:00</td></tr>
+            <tr data-day="6" class="row-sat"><td>토요일</td><td>09:00 - 13:00</td><td>점심시간 없음</td></tr>
+            <tr data-day="0" class="row-closed"><td>일요일</td><td>휴진</td><td>-</td></tr>
+            <tr data-day="-1" class="row-closed"><td>공휴일</td><td>휴진</td><td>-</td></tr>
+          </tbody>
+        </table>
+        <p class="schedule-note-v2">* 접수는 진료 마감 30분 전까지 가능합니다.</p>
+      </div>
+      <!-- 오른쪽: 오시는 길 -->
+      <div class="map-col" id="location">
+        <h3 class="col-title">오시는 길</h3>
+        <div class="map-iframe-wrap">
+          <iframe
+            src="https://maps.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C+%EA%B5%AC%EB%A1%9C%EA%B5%AC+%EA%B0%80%EB%A7%88%EC%82%B0%EB%A1%9C+268&output=embed"
+            width="100%" height="400" style="border:0; border-radius:12px;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
-        <div class="loc-item">
-          <div class="loc-icon">&#128663;</div>
-          <div>
-            <h4>주차</h4>
-            <p>건물 내 지하주차장 이용 가능<br>(진료 시 2시간 무료)</p>
+        <div class="map-info-bar">
+          <div class="map-info-item">
+            <span class="map-info-icon">📍</span>
+            <span>서울특별시 구로구 가마산로 268 와이즈플레이스 2층</span>
           </div>
-        </div>
-        <div class="loc-item">
-          <div class="loc-icon">&#128222;</div>
-          <div>
-            <h4>연락처</h4>
-            <p>전화: 02-000-0000<br>팩스: 02-000-0001</p>
+          <div class="map-info-item">
+            <span class="map-info-icon">📞</span>
+            <span>02-830-8388</span>
           </div>
         </div>
       </div>
@@ -728,14 +1368,7 @@ img { max-width: 100%; display: block; }
   </div>
 </section>
 
-<!-- ===== CTA ===== -->
-<section class="cta">
-  <div class="container fade-in">
-    <h2>건강이 걱정되시나요?</h2>
-    <p>지금 바로 서울내과의원에 상담하세요.</p>
-    <a href="tel:02-000-0000" class="btn btn-white">&#128222; 02-000-0000</a>
-  </div>
-</section>
+
 
 <!-- ===== Footer ===== -->
 <footer class="footer">
@@ -743,7 +1376,7 @@ img { max-width: 100%; display: block; }
     <div class="footer-grid">
       <div>
         <div class="footer-logo">서울내과의원</div>
-        <p>서울특별시 강남구 테헤란로 123, 4층<br>전화: 02-000-0000 | 팩스: 02-000-0001<br>사업자등록번호: 000-00-00000</p>
+        <p>서울특별시 구로구 가마산로 268 와이즈플레이스 2층<br>전화: 02-830-8388 | 팩스: 02-830-8389<br>사업자등록번호: 000-00-00000</p>
       </div>
       <div>
         <h4>진료안내</h4>
@@ -785,6 +1418,71 @@ img { max-width: 100%; display: block; }
 </div>
 
 <script>
+// ===== Slider =====
+var currentSlide = 0;
+var slides = document.querySelectorAll('.slider-slide');
+var dots = document.querySelectorAll('.slider-dot');
+var totalSlides = slides.length;
+var sliderInterval;
+
+function goToSlide(n) {
+  // Reset Ken Burns on leaving slide
+  var oldImg = slides[currentSlide].querySelector('img');
+  if (oldImg) { oldImg.style.animation = 'none'; oldImg.offsetHeight; oldImg.style.animation = ''; }
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = (n + totalSlides) % totalSlides;
+  // Restart Ken Burns on new slide
+  var newImg = slides[currentSlide].querySelector('img');
+  if (newImg) { newImg.style.animation = 'none'; newImg.offsetHeight; newImg.style.animation = ''; }
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+
+function changeSlide(dir) {
+  goToSlide(currentSlide + dir);
+  resetInterval();
+}
+
+function resetInterval() {
+  clearInterval(sliderInterval);
+  sliderInterval = setInterval(function() { goToSlide(currentSlide + 1); }, 5000);
+}
+
+resetInterval();
+
+// ===== Doctor Tabs =====
+function selectDoctor(idx) {
+  document.querySelectorAll('.doc-tab').forEach(function(t, i) {
+    t.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.doc-panel').forEach(function(p, i) {
+    p.classList.toggle('active', i === idx);
+  });
+}
+
+function selectInfoTab(btn, panelId) {
+  var parent = document.getElementById(panelId);
+  var tabs = btn.parentElement.querySelectorAll('.doc-info-tab');
+  var contents = parent.querySelectorAll('.doc-info-content');
+  var idx = Array.prototype.indexOf.call(tabs, btn);
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  contents.forEach(function(c) { c.classList.remove('active'); });
+  btn.classList.add('active');
+  if (contents[idx]) contents[idx].classList.add('active');
+}
+
+// ===== Today Highlight =====
+(function() {
+  var today = new Date().getDay();
+  var rows = document.querySelectorAll('#scheduleTable tbody tr[data-day]');
+  rows.forEach(function(row) {
+    if (parseInt(row.getAttribute('data-day')) === today) {
+      row.classList.add('row-today');
+    }
+  });
+})();
+
 // ===== Clinic Data =====
 const clinics = [
   {
