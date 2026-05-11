@@ -33,8 +33,11 @@ img { max-width: 100%; display: block; }
   --gray-200: #EEEEEE;
   --gray-600: #757575;
   --gray-800: #424242;
-  --shadow: 0 2px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --shadow: 0 2px 16px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+  --radius: 16px;
+  --transition: all .3s cubic-bezier(.4,0,.2,1);
 }
 
 /* ===== Layout ===== */
@@ -43,12 +46,14 @@ img { max-width: 100%; display: block; }
 /* ===== Header ===== */
 .header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: var(--white); border-bottom: 1px solid var(--gray-200);
-  transition: background .3s;
+  background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  transition: var(--transition);
 }
+.header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
 .header-row-top {
   display: flex; justify-content: center; align-items: center;
-  padding: 14px 20px 10px; border-bottom: 1px solid var(--gray-200);
+  padding: 14px 20px 10px; border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 .logo { display: inline-block; }
 .logo img { height: 52px; width: auto; }
@@ -59,10 +64,15 @@ img { max-width: 100%; display: block; }
 .nav-list { display: flex; gap: 0; align-items: center; }
 .nav-item { position: relative; }
 .nav-item > a {
-  display: block; padding: 8px 24px; font-size: 0.95rem; font-weight: 600;
-  color: #1a237e; transition: all .2s;
+  display: block; padding: 8px 14px; font-size: 0.88rem; font-weight: 600;
+  color: #1a237e; transition: var(--transition); position: relative;
 }
 .nav-item > a:hover, .nav-item > a.active { color: var(--primary); }
+.nav-item > a::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 2px; background: var(--primary); transition: width .3s ease;
+}
+.nav-item > a:hover::after, .nav-item > a.active::after { width: 60%; }
 .nav-divider { color: var(--gray-200); font-size: 0.8rem; user-select: none; line-height: 1; }
 /* Dropdown */
 .dropdown {
@@ -80,10 +90,10 @@ img { max-width: 100%; display: block; }
 .dropdown a:hover { background: var(--primary-bg); color: var(--primary); }
 
 /* Mobile Toggle */
-.nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; background: none; border: none; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
-.nav-toggle span { display: block; width: 24px; height: 2px; background: var(--gray-800); border-radius: 2px; transition: all .3s; }
+.nav-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; padding: 8px; background: none; border: none; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); z-index: 1001; -webkit-tap-highlight-color: transparent; }
+.nav-toggle span { display: block; width: 22px; height: 2px; background: var(--gray-800); border-radius: 2px; transition: all .35s cubic-bezier(.4,0,.2,1); transform-origin: center; }
 .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
-.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
 
 /* ===== Slider ===== */
@@ -305,12 +315,13 @@ img { max-width: 100%; display: block; }
 /* Detail panel */
 .doc-panels { position: relative; min-height: 320px; }
 .doc-panel {
-  display: none; opacity: 0; transition: opacity .4s ease;
+  display: none; opacity: 0; transition: opacity .5s cubic-bezier(.4,0,.2,1);
 }
 .doc-panel.active { display: grid; opacity: 1; }
 .doc-panel {
   grid-template-columns: 280px 1fr; gap: 44px; align-items: start;
   background: var(--gray-50); border-radius: 20px; padding: 40px;
+  border: 1px solid rgba(0,0,0,0.04);
 }
 .doc-panel-photo {
   width: 100%; aspect-ratio: 3/4; border-radius: 16px; overflow: hidden;
@@ -363,10 +374,10 @@ img { max-width: 100%; display: block; }
 .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
 .news-card {
   background: var(--white); border-radius: 16px; overflow: hidden;
-  box-shadow: var(--shadow); border: 1px solid var(--gray-200);
-  transition: all .3s;
+  box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04);
+  transition: var(--transition);
 }
-.news-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.news-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(21,101,192,0.1); }
 .news-card-img { width: 100%; height: 200px; object-fit: cover; display: block; }
 .news-card-body { padding: 24px; }
 .news-card-title {
@@ -418,7 +429,7 @@ img { max-width: 100%; display: block; }
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 14px 32px; border-radius: 50px; font-size: 1rem; font-weight: 600;
-  transition: all .25s; cursor: pointer; border: none;
+  transition: var(--transition); cursor: pointer; border: none;
 }
 .btn-white { background: var(--white); color: var(--primary-dark); }
 .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
@@ -530,9 +541,9 @@ img { max-width: 100%; display: block; }
 .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .info-card {
   background: var(--white); border-radius: 16px; padding: 36px 28px;
-  box-shadow: var(--shadow); transition: all .3s; border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow); transition: var(--transition); border: 1px solid rgba(0,0,0,0.04);
 }
-.info-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+.info-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(21,101,192,0.15); }
 .info-card-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--primary-bg); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 18px; }
 .info-card h3 { font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 12px; }
 .info-card p { font-size: 0.9rem; color: var(--gray-600); line-height: 1.8; }
@@ -556,7 +567,7 @@ img { max-width: 100%; display: block; }
 }
 .checkup-clinic-card {
   background: #fff; border-radius: 14px; overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06); transition: all .35s;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06); transition: var(--transition);
 }
 .checkup-clinic-card:hover { transform: translateY(-5px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
 .checkup-clinic-card img {
@@ -570,7 +581,7 @@ img { max-width: 100%; display: block; }
 /* ===== 진료과목 ===== */
 .dept-section {
   position: relative; padding: 80px 0;
-  background: url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1400&q=60') center/cover no-repeat;
+  background: url('https://cdn.imweb.me/upload/S20260108b9005a7eb2710/42a42b7b04456.png') center/cover no-repeat;
 }
 .dept-section::before {
   content: ''; position: absolute; inset: 0;
@@ -593,17 +604,12 @@ img { max-width: 100%; display: block; }
   transition: all .35s; cursor: default;
 }
 .dept-card:hover { background: rgba(30,45,75,0.95); }
-.dept-card-icon {
-  width: 48px; height: 48px; border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.2);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 18px; transition: all .35s;
+.dept-card::before {
+  content: ''; display: block; width: 28px; height: 2px;
+  background: rgba(255,255,255,0.25); margin-bottom: 16px;
+  transition: background .3s;
 }
-.dept-card:hover .dept-card-icon {
-  border-color: var(--primary-light); background: rgba(66,165,245,0.12);
-}
-.dept-card-icon i { font-size: 1.1rem; color: rgba(255,255,255,0.7); transition: color .3s; }
-.dept-card:hover .dept-card-icon i { color: var(--primary-light); }
+.dept-card:hover::before { background: var(--primary-light); }
 .dept-card h3 {
   font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 10px;
 }
@@ -639,10 +645,10 @@ img { max-width: 100%; display: block; }
 .clinic-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .clinic-card {
   background: var(--white); border-radius: 14px; padding: 30px 20px;
-  text-align: center; box-shadow: var(--shadow); transition: all .3s;
-  border: 1px solid var(--gray-200); cursor: pointer;
+  text-align: center; box-shadow: var(--shadow); transition: var(--transition);
+  border: 1px solid rgba(0,0,0,0.04); cursor: pointer;
 }
-.clinic-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+.clinic-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(21,101,192,0.15); }
 .clinic-card .icon { font-size: 2.4rem; margin-bottom: 14px; }
 .clinic-card h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
 .clinic-card p { font-size: 0.82rem; color: var(--gray-600); line-height: 1.6; }
@@ -697,23 +703,25 @@ img { max-width: 100%; display: block; }
 .cta p { opacity: 0.9; margin-bottom: 28px; font-size: 1.05rem; }
 
 /* ===== Footer ===== */
-.footer { background: #1a1a2e; color: rgba(255,255,255,0.7); padding: 50px 0 30px; }
+.footer { background: #1a1a2e; color: rgba(255,255,255,0.65); padding: 56px 0 30px; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-.footer h4 { color: var(--white); font-size: 1rem; margin-bottom: 16px; }
-.footer p, .footer a { font-size: 0.85rem; line-height: 1.8; }
+.footer h4 { color: var(--white); font-size: 1rem; margin-bottom: 16px; position: relative; padding-bottom: 10px; }
+.footer h4::after { content: ''; position: absolute; bottom: 0; left: 0; width: 24px; height: 2px; background: var(--primary-light); border-radius: 2px; }
+.footer p, .footer a { font-size: 0.85rem; line-height: 1.9; }
+.footer a { transition: color .2s; }
 .footer a:hover { color: var(--primary-light); }
 .footer-logo { font-size: 1.3rem; font-weight: 700; color: var(--white); margin-bottom: 12px; }
-.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 0.8rem; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; text-align: center; font-size: 0.8rem; color: rgba(255,255,255,0.4); }
 
 /* ===== Scroll to Top ===== */
 .scroll-top {
   position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px;
   background: var(--primary); color: var(--white); border: none; border-radius: 50%;
-  font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow-lg);
-  opacity: 0; visibility: hidden; transition: all .3s; z-index: 999;
+  font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 16px rgba(21,101,192,0.35);
+  opacity: 0; visibility: hidden; transition: var(--transition); z-index: 999;
 }
 .scroll-top.show { opacity: 1; visibility: visible; }
-.scroll-top:hover { background: var(--primary-dark); transform: translateY(-3px); }
+.scroll-top:hover { background: var(--primary-dark); transform: translateY(-3px); box-shadow: 0 6px 24px rgba(21,101,192,0.45); }
 
 /* ===== Modal ===== */
 .modal-overlay {
@@ -741,79 +749,199 @@ img { max-width: 100%; display: block; }
 .modal .detail-item p { font-size: 0.82rem; color: var(--gray-600); line-height: 1.6; }
 
 /* ===== Animations ===== */
-.fade-in { opacity: 0; transform: translateY(30px); transition: all .6s ease; }
+.fade-in { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1); }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { transition: none; opacity: 1; transform: none; }
+  .slider-slide img { animation: none !important; }
+}
 
 /* ===== Responsive ===== */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .info-grid { grid-template-columns: repeat(2, 1fr); }
   .clinic-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .checkup-clinic-grid { grid-template-columns: repeat(2, 1fr); }
+  .intro-cards { grid-template-columns: repeat(2, 1fr); }
+  .intro-card:last-child { grid-column: 1 / -1; }
 }
-@media (max-width: 768px) {
+
+/* ===== Mobile Nav & Breakpoint at 960px ===== */
+@media (max-width: 960px) {
+  /* -- Mobile Nav (right-side drawer) -- */
   .nav-toggle { display: flex; }
   .header-row-top { position: relative; }
   .header-row-bottom { display: none; }
   .nav-list {
-    position: fixed; top: 77px; left: 0; right: 0; bottom: 0;
-    background: var(--white); flex-direction: column; padding: 20px;
-    gap: 0; transform: translateX(100%); transition: transform .3s;
-    overflow-y: auto; display: flex;
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(320px,85vw);
+    background: rgba(255,255,255,0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    flex-direction: column; padding: 90px 20px 40px;
+    gap: 0; transform: translateX(100%); transition: transform .4s cubic-bezier(.4,0,.2,1);
+    overflow-y: auto; display: flex; z-index: 999;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.12);
   }
   .nav-list.open { transform: translateX(0); }
   .nav-divider { display: none; }
+  .nav-item > a::after { display: none; }
   .dropdown {
     position: static; opacity: 1; visibility: visible;
     transform: none !important;
     box-shadow: none; padding: 0 0 0 16px; display: none;
+    background: var(--gray-50); margin: 4px 0; border-radius: 12px;
   }
   .nav-item.open .dropdown { display: block; }
-  .nav-item > a { padding: 12px 16px; font-size: 1rem; }
-  .slider { margin-top: 77px; }
-  .partner-label { padding: 0 20px; font-size: 0.9rem; }
-  .news-grid { grid-template-columns: 1fr; }
-  .news-bg-text { font-size: 2rem; }
-  .doc-tabs { gap: 24px; }
-  .doc-tab-photo { width: 76px; height: 76px; }
-  .doc-panel { grid-template-columns: 1fr; gap: 24px; padding: 28px 20px; }
-  .doc-panel-photo { max-width: 220px; margin: 0 auto; }
-  .doc-info-tab { padding: 8px 14px; font-size: 0.8rem; }
-  .intro-top { grid-template-columns: 1fr; gap: 30px; }
-  .intro-bg-text { font-size: 2rem; }
-  .intro-photos img { height: 180px; }
-  .intro-cards { grid-template-columns: 1fr; }
-  .intro-card { height: 260px; }
-  .slider { height: 75vh; min-height: 480px; max-height: 700px; }
-  .slide-content { padding: 0 5%; }
-  .slide-title { font-size: 1.7rem; }
-  .slide-title .num-highlight { font-size: 2.4rem; }
-  .slide-desc { font-size: 0.88rem; }
-  .slide-glass { padding: 30px 24px; }
-  .slider-arrow { width: 42px; height: 42px; font-size: 1rem; }
-  .slider-arrow.prev { left: 12px; }
-  .slider-arrow.next { right: 12px; }
-  .slider-dots { bottom: 24px; }
-  .info-grid { grid-template-columns: 1fr; }
-  .checkup-clinic-grid { grid-template-columns: repeat(2, 1fr); }
-  .dept-grid { grid-template-columns: 1fr; }
+  .dropdown a { padding: 12px 16px; font-size: 0.9rem; border-radius: 8px; }
+  .dropdown a:hover { background: var(--primary-bg); }
+  .nav-item > a {
+    padding: 14px 16px; font-size: 1.05rem; border-bottom: 1px solid var(--gray-200);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-item:last-child > a { border-bottom: none; }
+  /* -- Slider offset for smaller header -- */
+  .slider { margin-top: 70px; }
+  /* -- Grid adjustments -- */
+  .doc-panel { grid-template-columns: 1fr; gap: 20px; padding: 24px 16px; border-radius: 14px; }
+  .doc-panel-photo { max-width: 200px; margin: 0 auto; border-radius: 12px; }
+}
+
+@media (max-width: 768px) {
+  /* -- Slider -- */
+  .slider { height: 70vh; min-height: 420px; max-height: 650px; }
+  .slide-content { padding: 0 20px; }
+  .slide-inner { max-width: 100%; }
+  .slide-title { font-size: clamp(1.4rem, 5vw, 1.8rem); margin-bottom: 16px; }
+  .slide-title .num-highlight { font-size: clamp(2rem, 7vw, 2.5rem); }
+  .slide-desc { font-size: 0.85rem; line-height: 1.7; margin-bottom: 24px; }
+  .slide-desc br { display: none; }
+  .slide-glass { padding: 28px 20px; }
+  .slider-arrow { width: 40px; height: 40px; font-size: 0.9rem; }
+  .slider-arrow.prev { left: 10px; }
+  .slider-arrow.next { right: 10px; }
+  .slider-dots { bottom: 20px; }
+  .slide-tag { font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 14px; }
+
+  /* -- Intro -- */
+  .intro { padding: 60px 0 40px; }
+  .intro-top { grid-template-columns: 1fr; gap: 24px; }
+  .intro-bg-text { font-size: 1.8rem; top: -10px; }
+  .intro-text h3 { font-size: 1.4rem; }
+  .intro-text p { font-size: 0.95rem; }
+  .intro-photos { gap: 10px; }
+  .intro-photos img { height: 160px; border-radius: 10px; }
+  .intro-cards { grid-template-columns: 1fr; gap: 16px; }
+  .intro-card { height: 220px; border-radius: 12px; }
+  .intro-card-content { padding: 20px; }
+  .intro-card-content h4 { font-size: 1.1rem; }
+
+  /* -- Doctors -- */
+  .doctors-section { padding: 60px 0; }
+  .doc-tabs { gap: 16px; overflow-x: auto; justify-content: flex-start; padding: 0 4px 12px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .doc-tabs::-webkit-scrollbar { display: none; }
+  .doc-tab { flex-shrink: 0; }
+  .doc-tab-photo { width: 70px; height: 70px; }
+  .doc-tab-name { font-size: 0.88rem; }
+  .doc-tab-pos { font-size: 0.72rem; }
+  .doc-info-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-wrap: nowrap; }
+  .doc-info-tabs::-webkit-scrollbar { display: none; }
+  .doc-info-tab { padding: 8px 14px; font-size: 0.8rem; white-space: nowrap; flex-shrink: 0; }
+
+  /* -- News -- */
+  .news-section { padding: 60px 0; }
+  .news-grid { grid-template-columns: 1fr; gap: 20px; }
+  .news-bg-text { font-size: 1.8rem; }
+  .news-header h2 { font-size: 1.5rem; }
+  .news-card { border-radius: 14px; }
+  .news-card-img { height: 170px; }
+
+  /* -- Partner -- */
+  .partner { padding: 20px 0; }
+  .partner-label { padding: 0 16px; font-size: 0.82rem; }
+
+  /* -- Checkup Clinic -- */
+  .checkup-clinic { padding: 60px 0; }
+  .checkup-clinic-header h2 { font-size: 1.5rem; }
+  .checkup-clinic-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .checkup-clinic-card { border-radius: 10px; }
+  .checkup-clinic-card .caption { padding: 14px 12px; font-size: 0.82rem; }
+
+  /* -- Dept -- */
+  .dept-grid { grid-template-columns: repeat(2, 1fr); }
+  .dept-header h2 { font-size: 1.5rem; }
+  .dept-card { padding: 24px 18px; }
+  .dept-card h3 { font-size: 0.95rem; }
+  .dept-card p { font-size: 0.78rem; }
+
+  /* -- Treatment -- */
   .treat-item { grid-template-columns: 1fr; }
   .treat-num { padding: 12px 16px 0; justify-content: flex-start; font-size: 0.9rem; }
-  .treat-body { padding: 12px 16px 20px; }
-  .clinic-grid { grid-template-columns: repeat(2, 1fr); }
+  .treat-body { padding: 10px 16px 18px; }
+
+  /* -- Schedule & Map -- */
+  .section-schedule-map { padding: 60px 0; }
+  .schedule-map-grid { grid-template-columns: 1fr; gap: 40px; }
+  .col-title { font-size: 1.3rem; }
+  .schedule-table-v2 { font-size: 0.85rem; }
+  .schedule-table-v2 th, .schedule-table-v2 td { padding: 10px 8px; font-size: 0.82rem; }
+  .map-iframe-wrap iframe { height: 300px; }
+
+  /* -- Info / Clinic / Checkup grids -- */
+  .info-grid { grid-template-columns: 1fr; }
+  .clinic-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .clinic-card { padding: 22px 16px; border-radius: 12px; }
+  .clinic-card .icon { font-size: 2rem; }
+  .clinic-card h3 { font-size: 0.92rem; }
   .checkup-grid { grid-template-columns: 1fr; }
-  .about-content { grid-template-columns: 1fr; gap: 30px; }
-  .about-image { height: 240px; }
-  .doctor-grid { grid-template-columns: 1fr; max-width: 280px; }
-  .schedule-map-grid { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+
+  /* -- About -- */
+  .about-content { grid-template-columns: 1fr; gap: 24px; }
+  .about-text h3 { font-size: 1.3rem; }
+  .about-image { height: 220px; border-radius: 14px; }
+  .doctor-grid { grid-template-columns: repeat(2, 1fr); max-width: 400px; gap: 20px; }
+  .doctor-photo { width: 120px; height: 120px; font-size: 2.5rem; }
+
+  /* -- CTA -- */
+  .cta { padding: 50px 20px; }
+  .cta h2 { font-size: 1.4rem; }
+  .cta p { font-size: 0.92rem; }
+
+  /* -- Footer -- */
+  .footer { padding: 40px 0 24px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  .footer h4 { font-size: 0.95rem; margin-bottom: 10px; }
+  .footer p, .footer a { font-size: 0.82rem; }
+  .footer-logo { font-size: 1.15rem; }
+
+  /* -- Section -- */
   .section { padding: 60px 0; }
   .section-header h2 { font-size: 1.5rem; }
+  .section-header p { font-size: 0.92rem; }
+
+  /* -- Modal -- */
+  .modal { padding: 28px 20px; border-radius: 16px; margin: 10px; }
+  .modal h2 { font-size: 1.2rem; }
+
+  /* -- Scroll Top -- */
+  .scroll-top { width: 42px; height: 42px; bottom: 20px; right: 16px; font-size: 1rem; }
 }
+
 @media (max-width: 480px) {
+  .slider { height: 60vh; min-height: 360px; max-height: 550px; }
+  .slide-title { font-size: clamp(1.2rem, 5vw, 1.5rem); }
+  .slide-glass { padding: 22px 16px; }
+  .slider-arrow { display: none; }
+  .intro-photos { grid-template-columns: 1fr; }
+  .intro-photos img { height: 180px; }
+  .checkup-clinic-grid { grid-template-columns: 1fr; }
+  .dept-grid { grid-template-columns: 1fr; }
   .clinic-grid { grid-template-columns: 1fr; }
   .about-values { grid-template-columns: 1fr; }
   .hero-buttons { flex-direction: column; align-items: center; }
-  .checkup-clinic-grid { grid-template-columns: 1fr; }
+  .doctor-grid { grid-template-columns: 1fr; max-width: 200px; }
+  .schedule-table-v2 th, .schedule-table-v2 td { padding: 8px 6px; font-size: 0.78rem; }
+  .map-iframe-wrap iframe { height: 250px; }
+  .news-card-img { height: 140px; }
+  .partner-label { display: none; }
+  .footer-bottom { font-size: 0.72rem; }
 }
 </style>
 </head>
@@ -822,7 +950,7 @@ img { max-width: 100%; display: block; }
 <!-- ===== Header ===== -->
 <header class="header" id="header">
   <div class="header-row-top">
-    <a href="#" class="logo">
+    <a href="index.html" class="logo">
       <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/60fd14b89dbfe.jpeg" alt="서울내과의원 로고">
     </a>
     <button class="nav-toggle" id="navToggle" aria-label="메뉴">
@@ -832,42 +960,78 @@ img { max-width: 100%; display: block; }
   <nav class="header-row-bottom">
     <ul class="nav-list" id="navList">
       <li class="nav-item">
-        <a href="#treatment">진료안내</a>
+        <a href="about/greeting.html">병원소개</a>
         <ul class="dropdown">
-          <li><a href="#subjects">진료과목 및 검사</a></li>
-          <li><a href="#schedule">진료시간</a></li>
-          <li><a href="#reservation">진료접수 및 예약</a></li>
+          <li><a href="about/greeting.html">인사말</a></li>
+          <li><a href="about/doctors.html">의료진소개</a></li>
+          <li><a href="about/tour.html">병원 둘러보기</a></li>
+          <li><a href="about/partners.html">협력병원</a></li>
         </ul>
       </li>
       <li class="nav-divider">|</li>
       <li class="nav-item">
-        <a href="#clinic">전문클리닉</a>
+        <a href="guide/schedule.html">진료안내</a>
         <ul class="dropdown">
-          <li><a href="#" onclick="openClinic(0);return false;">소화기클리닉</a></li>
-          <li><a href="#" onclick="openClinic(1);return false;">내시경클리닉</a></li>
-          <li><a href="#" onclick="openClinic(2);return false;">간질환클리닉</a></li>
-          <li><a href="#" onclick="openClinic(3);return false;">성인병클리닉</a></li>
-          <li><a href="#" onclick="openClinic(4);return false;">갑상선클리닉</a></li>
-          <li><a href="#" onclick="openClinic(5);return false;">초음파클리닉</a></li>
-          <li><a href="#" onclick="openClinic(6);return false;">금연클리닉</a></li>
-          <li><a href="#" onclick="openClinic(7);return false;">예방접종클리닉</a></li>
+          <li><a href="guide/schedule.html">진료시간</a></li>
+          <li><a href="guide/calendar.html">진료실 일정</a></li>
+          <li><a href="guide/reservation.html">예약 및 문의</a></li>
+          <li><a href="guide/directions.html">오시는 길</a></li>
+          <li><a href="guide/charges.html">비급여 진료비</a></li>
+          <li><a href="guide/vaccination.html">예방접종 항목</a></li>
         </ul>
       </li>
       <li class="nav-divider">|</li>
       <li class="nav-item">
-        <a href="#checkup-general">종합검진센터</a>
-      </li>
-      <li class="nav-divider">|</li>
-      <li class="nav-item">
-        <a href="#checkup-national">국가건강검진센터</a>
-      </li>
-      <li class="nav-divider">|</li>
-      <li class="nav-item">
-        <a href="#about">병원소개</a>
+        <a href="checkup/national.html">건강검진센터</a>
         <ul class="dropdown">
-          <li><a href="#about">서울내과</a></li>
-          <li><a href="#doctors">의료진 소개</a></li>
-          <li><a href="#location">오시는 길</a></li>
+          <li><a href="checkup/national.html">국가건강검진</a></li>
+          <li><a href="checkup/comprehensive.html">종합건강검진</a></li>
+          <li><a href="checkup/employment.html">채용 검진</a></li>
+        </ul>
+      </li>
+      <li class="nav-divider">|</li>
+      <li class="nav-item">
+        <a href="endoscopy/gastroscopy.html">내시경클리닉</a>
+        <ul class="dropdown">
+          <li><a href="endoscopy/gastroscopy.html">위 내시경</a></li>
+          <li><a href="endoscopy/colonoscopy.html">대장 내시경</a></li>
+          <li><a href="endoscopy/sleep.html">수면 내시경</a></li>
+          <li><a href="endoscopy/polypectomy.html">용종 절제술</a></li>
+        </ul>
+      </li>
+      <li class="nav-divider">|</li>
+      <li class="nav-item">
+        <a href="clinic/hypertension.html">내과전문클리닉</a>
+        <ul class="dropdown">
+          <li><a href="clinic/hypertension.html">고혈압</a></li>
+          <li><a href="clinic/diabetes.html">당뇨</a></li>
+          <li><a href="clinic/hyperlipidemia.html">고지혈증</a></li>
+          <li><a href="clinic/digestive.html">소화기 질환</a></li>
+          <li><a href="clinic/heart.html">심장 질환</a></li>
+          <li><a href="clinic/thyroid.html">갑상선 질환</a></li>
+          <li><a href="clinic/osteoporosis.html">골다공증</a></li>
+        </ul>
+      </li>
+      <li class="nav-divider">|</li>
+      <li class="nav-item">
+        <a href="ultrasound/upper-abdomen.html">초음파클리닉</a>
+        <ul class="dropdown">
+          <li><a href="ultrasound/upper-abdomen.html">상복부 초음파</a></li>
+          <li><a href="ultrasound/urinary.html">비뇨기계 초음파</a></li>
+          <li><a href="ultrasound/kidney.html">신장 초음파</a></li>
+          <li><a href="ultrasound/lower-abdomen.html">하복부 초음파</a></li>
+          <li><a href="ultrasound/carotid.html">경동맥 초음파</a></li>
+          <li><a href="ultrasound/thyroid-us.html">갑상선 초음파</a></li>
+          <li><a href="ultrasound/breast.html">유방 초음파</a></li>
+          <li><a href="ultrasound/heart-us.html">심장 초음파</a></li>
+        </ul>
+      </li>
+      <li class="nav-divider">|</li>
+      <li class="nav-item">
+        <a href="service/notice.html">고객서비스</a>
+        <ul class="dropdown">
+          <li><a href="service/notice.html">공지사항</a></li>
+          <li><a href="service/resources.html">자료실</a></li>
         </ul>
       </li>
     </ul>
@@ -965,13 +1129,13 @@ img { max-width: 100%; display: block; }
         <p>개인의 건강한 삶을 통해 안정되고 행복한 가정,<br>따뜻한 사회와 아름다운 세상을 함께 만드는 것입니다!</p>
       </div>
       <div class="intro-photos">
-        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/60fd14b89dbfe.jpeg" alt="서울내과의원 사진 1">
-        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/60fd14b89dbfe.jpeg" alt="서울내과의원 사진 2">
+        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/381ba8bcf5d83.png" alt="서울내과의원 건강검진">
+        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/68fc69875add9.png" alt="서울내과의원 시설">
       </div>
     </div>
     <div class="intro-cards fade-in">
       <div class="intro-card">
-        <img src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=600&q=80" alt="전문 클리닉">
+        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/1cede447a87a0.png" alt="전문 클리닉">
         <div class="intro-card-content">
           <h4>전문 클리닉</h4>
           <p>소화기클리닉</p>
@@ -979,7 +1143,7 @@ img { max-width: 100%; display: block; }
         </div>
       </div>
       <div class="intro-card">
-        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80" alt="종합검진">
+        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/381ba8bcf5d83.png" alt="종합검진">
         <div class="intro-card-content">
           <h4>종합검진</h4>
           <p>주요 암 조기진단을 위한 다양하고 합리적인 맞춤형 건강검진</p>
@@ -987,7 +1151,7 @@ img { max-width: 100%; display: block; }
         </div>
       </div>
       <div class="intro-card">
-        <img src="https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=600&q=80" alt="국가건강검진">
+        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/42a42b7b04456.png" alt="국가건강검진">
         <div class="intro-card-content">
           <h4>국가건강검진</h4>
           <p>국민건강보험공단에서 시행하는 6대 암검진과 일반검진 프로그램</p>
@@ -1161,7 +1325,7 @@ img { max-width: 100%; display: block; }
     <div class="news-grid fade-in">
       <!-- 카드 1: 공지사항 -->
       <div class="news-card">
-        <img class="news-card-img" src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80" alt="공지사항">
+        <img class="news-card-img" src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/381ba8bcf5d83.png" alt="공지사항">
         <div class="news-card-body">
           <div class="news-card-title">| 공지사항</div>
           <div class="news-list">
@@ -1186,7 +1350,7 @@ img { max-width: 100%; display: block; }
       </div>
       <!-- 카드 2: 건강상식 -->
       <div class="news-card">
-        <img class="news-card-img" src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=600&q=80" alt="건강상식">
+        <img class="news-card-img" src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/1cede447a87a0.png" alt="건강상식">
         <div class="news-card-body">
           <div class="news-card-title">| 건강상식</div>
           <div class="news-list">
@@ -1212,7 +1376,7 @@ img { max-width: 100%; display: block; }
       <!-- 카드 3: 뉴스/블로그 -->
       <div class="news-card">
         <a href="#news" class="news-banner">
-          <img src="https://images.unsplash.com/photo-1504439468489-c8920d796a29?w=600&q=80" alt="뉴스">
+          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/68fc69875add9.png" alt="뉴스">
           <div class="news-banner-overlay">
             <span class="news-banner-text">서울내과의원 뉴스 &gt;</span>
           </div>
@@ -1258,19 +1422,19 @@ img { max-width: 100%; display: block; }
     </div>
     <div class="checkup-clinic-grid fade-in">
       <div class="checkup-clinic-card">
-        <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?w=500&q=80" alt="의료장비">
+        <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/8562e4cee945d.png" alt="의료장비">
         <div class="caption">고성능의 우수한 의료장비</div>
       </div>
       <div class="checkup-clinic-card">
-        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=80" alt="의료진 상담">
+        <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528" alt="의료진 상담">
         <div class="caption">숙련된 의료진의 정확한 진단과 치료</div>
       </div>
       <div class="checkup-clinic-card">
-        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=500&q=80" alt="원스톱 서비스">
+        <img src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8" alt="원스톱 서비스">
         <div class="caption">진단에서 치료까지 원스톱 서비스</div>
       </div>
       <div class="checkup-clinic-card">
-        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80" alt="건강관리">
+        <img src="https://images.unsplash.com/photo-1471864190281-a93a3070b6de" alt="건강관리">
         <div class="caption">평생 건강관리 프로그램</div>
       </div>
     </div>
@@ -1286,32 +1450,26 @@ img { max-width: 100%; display: block; }
     </div>
     <div class="dept-grid fade-in">
       <div class="dept-card">
-        <div class="dept-card-icon"><i class="fa-solid fa-clipboard-list"></i></div>
         <h3>개인종합건강검진</h3>
         <p>베이직 검진, 스탠다드 검진, 클래식 검진, 정밀 종합검진</p>
       </div>
       <div class="dept-card">
-        <div class="dept-card-icon"><i class="fa-solid fa-file-medical"></i></div>
         <h3>국민건강보험공단검진</h3>
         <p>일반검진, 5대 암 검진</p>
       </div>
       <div class="dept-card">
-        <div class="dept-card-icon"><i class="fa-solid fa-building"></i></div>
         <h3>기업/단체 건강검진</h3>
         <p>건강한 직원들이 건강한 기업을 만듭니다. 내원하는 기업의 구성원 모두가 건강할 수 있도록 언제나 최선을 다하겠습니다.</p>
       </div>
       <div class="dept-card">
-        <div class="dept-card-icon"><i class="fa-solid fa-microscope"></i></div>
         <h3>소화기내시경</h3>
         <p>위, 대장내시경, 설사약 없는 대장내시경, 당일 용종절제술</p>
       </div>
       <div class="dept-card">
-        <div class="dept-card-icon"><i class="fa-solid fa-satellite-dish"></i></div>
         <h3>영상의학</h3>
         <p>다중채널CT, 정밀 초음파 (복부/갑상선/경동맥/유방/심장), 전신골밀도검사(DEXA), 유방촬영검사, 일반 X-ray 검사</p>
       </div>
       <div class="dept-card">
-        <div class="dept-card-icon"><i class="fa-solid fa-pills"></i></div>
         <h3>내과전문 진료</h3>
         <p>당뇨병, 고혈압, 고지혈증 등 만성질환, 소화기질환, 호흡기질환, 심장질환, 내분비질환, 간질환, 신장질환 등 내과 질환 전반의 진단과 치료</p>
       </div>
@@ -1355,11 +1513,11 @@ img { max-width: 100%; display: block; }
         </div>
         <div class="map-info-bar">
           <div class="map-info-item">
-            <span class="map-info-icon">📍</span>
+            <span class="map-info-icon" style="font-size:0.8rem;font-weight:700;color:var(--primary);background:var(--primary-bg);padding:3px 8px;border-radius:4px;white-space:nowrap">주소</span>
             <span>서울특별시 구로구 가마산로 268 와이즈플레이스 2층</span>
           </div>
           <div class="map-info-item">
-            <span class="map-info-icon">📞</span>
+            <span class="map-info-icon" style="font-size:0.8rem;font-weight:700;color:var(--primary);background:var(--primary-bg);padding:3px 8px;border-radius:4px;white-space:nowrap">전화</span>
             <span>02-830-8388</span>
           </div>
         </div>
@@ -1380,22 +1538,24 @@ img { max-width: 100%; display: block; }
       </div>
       <div>
         <h4>진료안내</h4>
-        <p><a href="#subjects">진료과목 및 검사</a></p>
-        <p><a href="#schedule">진료시간</a></p>
-        <p><a href="#reservation">진료접수 및 예약</a></p>
+        <p><a href="guide/schedule.html">진료시간</a></p>
+        <p><a href="guide/reservation.html">예약 및 문의</a></p>
+        <p><a href="guide/directions.html">오시는 길</a></p>
+        <p><a href="guide/charges.html">비급여 진료비</a></p>
       </div>
       <div>
-        <h4>전문클리닉</h4>
-        <p><a href="#clinic">소화기클리닉</a></p>
-        <p><a href="#clinic">내시경클리닉</a></p>
-        <p><a href="#clinic">간질환클리닉</a></p>
-        <p><a href="#clinic">성인병클리닉</a></p>
+        <h4>클리닉</h4>
+        <p><a href="endoscopy/gastroscopy.html">내시경클리닉</a></p>
+        <p><a href="clinic/hypertension.html">내과전문클리닉</a></p>
+        <p><a href="ultrasound/upper-abdomen.html">초음파클리닉</a></p>
+        <p><a href="checkup/national.html">건강검진센터</a></p>
       </div>
       <div>
         <h4>병원소개</h4>
-        <p><a href="#about">서울내과</a></p>
-        <p><a href="#doctors">의료진 소개</a></p>
-        <p><a href="#location">오시는 길</a></p>
+        <p><a href="about/greeting.html">인사말</a></p>
+        <p><a href="about/doctors.html">의료진소개</a></p>
+        <p><a href="service/notice.html">공지사항</a></p>
+        <p><a href="service/resources.html">자료실</a></p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1589,15 +1749,34 @@ document.addEventListener('keydown', function(e) {
 const navToggle = document.getElementById('navToggle');
 const navList = document.getElementById('navList');
 
+// Overlay for drawer
+const navOverlay = document.createElement('div');
+navOverlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:998;opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;';
+document.body.appendChild(navOverlay);
+
+function openMobileNav() {
+  navToggle.classList.add('active');
+  navList.classList.add('open');
+  navOverlay.style.opacity = '1'; navOverlay.style.visibility = 'visible';
+  document.body.style.overflow = 'hidden';
+}
+function closeMobileNav() {
+  navToggle.classList.remove('active');
+  navList.classList.remove('open');
+  navOverlay.style.opacity = '0'; navOverlay.style.visibility = 'hidden';
+  document.body.style.overflow = '';
+}
+
 navToggle.addEventListener('click', function() {
-  this.classList.toggle('active');
-  navList.classList.toggle('open');
+  navList.classList.contains('open') ? closeMobileNav() : openMobileNav();
 });
+navOverlay.addEventListener('click', closeMobileNav);
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMobileNav(); });
 
 // Mobile dropdown toggle
 document.querySelectorAll('.nav-item > a').forEach(function(link) {
   link.addEventListener('click', function(e) {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 960) {
       const parent = this.parentElement;
       const dropdown = parent.querySelector('.dropdown');
       if (dropdown) {
@@ -1608,24 +1787,44 @@ document.querySelectorAll('.nav-item > a').forEach(function(link) {
   });
 });
 
-// Close nav on link click (mobile)
+// Close nav on sub-link click (mobile)
 document.querySelectorAll('.dropdown a').forEach(function(link) {
   link.addEventListener('click', function() {
-    if (window.innerWidth <= 768) {
-      navToggle.classList.remove('active');
-      navList.classList.remove('open');
-    }
+    if (window.innerWidth <= 960) closeMobileNav();
   });
 });
 
-// ===== Scroll to Top =====
+// ===== Scroll to Top & Header Scroll Effect =====
 const scrollBtn = document.getElementById('scrollTop');
+const header = document.getElementById('header');
 window.addEventListener('scroll', function() {
   scrollBtn.classList.toggle('show', window.scrollY > 400);
+  header.classList.toggle('scrolled', window.scrollY > 50);
 });
 scrollBtn.addEventListener('click', function() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+// ===== Touch Swipe for Slider =====
+(function() {
+  var slider = document.querySelector('.slider');
+  var startX = 0, startY = 0, distX = 0, distY = 0;
+  slider.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  slider.addEventListener('touchmove', function(e) {
+    distX = e.touches[0].clientX - startX;
+    distY = e.touches[0].clientY - startY;
+  }, { passive: true });
+  slider.addEventListener('touchend', function() {
+    if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > 50) {
+      if (distX > 0) changeSlide(-1);
+      else changeSlide(1);
+    }
+    distX = 0; distY = 0;
+  });
+})();
 
 // ===== Scroll Animations =====
 const observer = new IntersectionObserver(function(entries) {
@@ -1640,20 +1839,4 @@ document.querySelectorAll('.fade-in').forEach(function(el) {
   observer.observe(el);
 });
 
-// ===== Active nav on scroll =====
-const sections = document.querySelectorAll('section[id]');
-window.addEventListener('scroll', function() {
-  let current = '';
-  sections.forEach(function(section) {
-    const top = section.offsetTop - 100;
-    if (window.scrollY >= top) current = section.getAttribute('id');
-  });
-  document.querySelectorAll('.nav-item > a').forEach(function(a) {
-    a.classList.remove('active');
-    const href = a.getAttribute('href');
-    if (href && href.substring(1) === current) a.classList.add('active');
-  });
-});
-</script>
-</body>
-</html>
+// ===== A
