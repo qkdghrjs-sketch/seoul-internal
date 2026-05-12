@@ -277,4 +277,225 @@ img{max-width:100%;display:block}
 /* Scroll to Top */
 .scroll-top{
   position:fixed;bottom:28px;right:24px;width:46px;height:46px;
-  background:var(--primary);color
+  background:var(--primary);color:#fff;border:none;border-radius:50%;
+  font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 16px rgba(21,101,192,0.4);
+  opacity:0;visibility:hidden;transition:var(--transition);z-index:999
+}
+.scroll-top.show{opacity:1;visibility:visible}
+.scroll-top:hover{background:var(--primary-dark);transform:translateY(-3px)}
+
+/* ===== 반응형 ===== */
+
+/* 960px: 7개 메뉴 아이템 → 모바일 네비 전환 */
+@media(max-width:960px){
+  :root{--header-h:70px}
+  .nav-toggle{display:flex}
+  .header-row-top{position:relative}
+  .header-row-bottom{display:none}
+  .page-hero{margin-top:var(--header-h);padding:40px 0}
+  .page-hero h1{font-size:1.75rem}
+}
+
+/* 모바일 메뉴 (960px 이하) */
+@media(max-width:960px){
+  .nav-list{
+    position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);
+    background:rgba(255,255,255,0.99);backdrop-filter:blur(16px);
+    flex-direction:column;padding:80px 0 40px;
+    gap:0;transform:translateX(100%);
+    transition:transform .4s cubic-bezier(.4,0,.2,1);
+    overflow-y:auto;display:flex;z-index:999;
+    box-shadow:-4px 0 24px rgba(0,0,0,0.12)
+  }
+  .nav-list.open{transform:translateX(0)}
+  .nav-divider{display:none}
+  .nav-item>a::after{display:none}
+  .nav-item>a{
+    padding:14px 22px;font-size:1rem;
+    border-bottom:1px solid var(--gray-100);
+    display:flex;justify-content:space-between;align-items:center
+  }
+  .nav-item>a::before{content:'›';font-size:1.2rem;color:#ccc}
+  .nav-item:last-child>a{border-bottom:none}
+  .dropdown{
+    position:static;opacity:1;visibility:visible;
+    transform:none!important;box-shadow:none;
+    padding:4px 0 4px 0;display:none;
+    border-radius:0;background:var(--gray-50);margin:0
+  }
+  .nav-item.open .dropdown{display:block}
+  .dropdown a{
+    padding:11px 22px 11px 36px;font-size:0.9rem;
+    border-bottom:1px solid rgba(0,0,0,0.04)
+  }
+  .dropdown a:last-child{border-bottom:none}
+  .dropdown a:hover{background:var(--primary-bg)}
+}
+
+/* 768px: 서브페이지 레이아웃 */
+@media(max-width:768px){
+  .subpage-body{padding:24px 0 56px}
+  .subpage-layout{grid-template-columns:1fr;gap:0}
+
+  /* 사이드바 → 가로 스크롤 탭 */
+  .sub-sidebar{
+    position:static;border-radius:0;
+    box-shadow:none;border:none;border-bottom:2px solid var(--gray-200);
+    background:#fff;margin-bottom:0
+  }
+  .sub-sidebar-title{display:none}
+  .sub-sidebar-nav{
+    display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;gap:0;padding:0 4px
+  }
+  .sub-sidebar-nav::-webkit-scrollbar{display:none}
+  .sub-sidebar-nav a{
+    display:inline-flex;align-items:center;flex-shrink:0;
+    padding:12px 16px;border-left:none;border-bottom:3px solid transparent;
+    border-right:none;font-size:0.84rem;white-space:nowrap;
+    background:transparent
+  }
+  .sub-sidebar-nav a::before{display:none}
+  .sub-sidebar-nav a:hover,
+  .sub-sidebar-nav a.active{
+    background:transparent;color:var(--primary);
+    border-bottom-color:var(--primary);border-left:none
+  }
+
+  /* 메인 컨텐츠 */
+  .sub-main{
+    padding:24px 16px;border-radius:0;
+    box-shadow:none;border:none;
+    border-top:1px solid var(--gray-100);min-height:0
+  }
+  .sub-main .page-ttl{font-size:1.35rem}
+  .card-grid{grid-template-columns:1fr;gap:14px}
+  .card{padding:20px 18px}
+  .step-item{padding:14px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:28px}
+}
+
+/* 640px */
+@media(max-width:640px){
+  .footer-grid{grid-template-columns:1fr;gap:24px}
+  .info-box{padding:16px 18px}
+  .warn-box{padding:12px 16px}
+}
+
+/* 480px */
+@media(max-width:480px){
+  .page-hero h1{font-size:1.45rem}
+  .page-hero{padding:32px 0}
+  .data-table{font-size:0.82rem}
+  .data-table th,.data-table td{padding:9px 10px}
+  .sub-main h3{font-size:0.97rem}
+}
+
+/* ===== 콘텐츠 섹션 헤딩 ===== */
+.sec-heading{
+  font-size:1.15rem;font-weight:800;color:var(--primary-dark);
+  margin:40px 0 18px;padding-bottom:12px;
+  border-bottom:2px solid var(--gray-200);position:relative
+}
+.sec-heading::after{
+  content:'';position:absolute;bottom:-2px;left:0;
+  width:40px;height:2px;background:var(--primary)
+}
+
+/* ===== Why 서울내과 카드 ===== */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:20px 0}
+.why-card{
+  background:#f4f8ff;border-radius:14px;padding:26px 20px;
+  border-left:4px solid var(--primary);transition:all .3s
+}
+.why-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.why-card h4{font-size:0.97rem;color:var(--primary-dark);margin-bottom:10px;font-weight:700}
+.why-card p{font-size:0.86rem;color:#555;line-height:1.85}
+
+/* ===== 절차 스텝 (세로) ===== */
+.process-v{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.process-step{display:flex;gap:18px;align-items:flex-start;position:relative;padding-bottom:28px}
+.process-step:last-child{padding-bottom:0}
+.process-step::before{
+  content:'';position:absolute;left:19px;top:42px;bottom:0;
+  width:2px;background:#dce8f9
+}
+.process-step:last-child::before{display:none}
+.ps-num{
+  width:40px;height:40px;border-radius:50%;background:var(--primary);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:0.88rem;flex-shrink:0;z-index:1;
+  box-shadow:0 3px 10px rgba(21,101,192,0.3)
+}
+.ps-body{padding-top:8px}
+.ps-body h4{font-size:0.97rem;font-weight:700;color:var(--primary-dark);margin-bottom:6px}
+.ps-body p{font-size:0.87rem;color:#555;line-height:1.85}
+
+/* ===== 진단 가능 질환 태그 ===== */
+.condition-wrap{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.condition-tag{
+  background:#EBF3FF;color:var(--primary-dark);
+  padding:8px 16px;border-radius:50px;
+  font-size:0.84rem;font-weight:600;
+  border:1px solid #c5dbf7;transition:all .2s
+}
+.condition-tag:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* ===== FAQ ===== */
+.faq-list{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.faq-item{background:#fff;border:1px solid #e4edf8;border-radius:12px;overflow:hidden}
+.faq-q{
+  padding:18px 20px;font-size:0.92rem;font-weight:700;
+  color:var(--primary-dark);display:flex;gap:12px;align-items:flex-start
+}
+.faq-q-badge{
+  background:var(--primary);color:#fff;width:24px;height:24px;
+  border-radius:6px;display:inline-flex;align-items:center;
+  justify-content:center;font-size:0.78rem;font-weight:800;flex-shrink:0;margin-top:1px
+}
+.faq-a{
+  padding:0 20px 18px 56px;font-size:0.87rem;
+  color:#555;line-height:1.88;border-top:1px solid #f0f4fb
+}
+
+/* ===== 비용 안내 (가격 대신) ===== */
+.price-note{
+  background:#fff8e1;border:1px solid #ffe082;
+  border-radius:12px;padding:22px 24px;margin:20px 0
+}
+.price-note h4{color:#e65100;font-size:0.95rem;margin-bottom:8px;font-weight:700}
+.price-note p{color:#555;font-size:0.87rem;line-height:1.85}
+
+/* ===== 하단 CTA ===== */
+.page-cta{
+  margin-top:52px;
+  background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+  border-radius:20px;padding:52px 40px;color:#fff;text-align:center
+}
+.page-cta h3{font-size:1.55rem;margin-bottom:10px;font-weight:800}
+.page-cta p{opacity:.85;margin-bottom:30px;font-size:0.95rem;line-height:1.8}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 30px;border-radius:50px;font-size:0.95rem;
+  font-weight:700;transition:all .3s;text-decoration:none;cursor:pointer
+}
+.cta-btn-white{background:#fff;color:var(--primary-dark)}
+.cta-btn-white:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.18)}
+.cta-btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.5)}
+.cta-btn-outline:hover{border-color:#fff;background:rgba(255,255,255,0.12)}
+
+/* ===== 반응형 (신규 섹션) ===== */
+@media(max-width:768px){
+  .why-grid{grid-template-columns:1fr;gap:12px}
+  .page-cta{padding:36px 20px;border-radius:14px}
+  .page-cta h3{font-size:1.2rem}
+  .cta-btns{flex-direction:column;align-items:center}
+  .cta-btn{width:100%;max-width:300px;justify-content:center}
+}
+@media(max-width:480px){
+  .condition-tag{font-size:0.8rem;padding:6px 12px}
+  .faq-q{font-size:0.88rem;padding:14px 16px}
+  .faq-a{padding:0 16px 14px 50px;font-size:0.84rem}
+}

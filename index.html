@@ -1839,4 +1839,21 @@ document.querySelectorAll('.fade-in').forEach(function(el) {
   observer.observe(el);
 });
 
-// ===== A
+// ===== Active nav on scroll =====
+const sections = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', function() {
+  let current = '';
+  sections.forEach(function(section) {
+    const top = section.offsetTop - 100;
+    if (window.scrollY >= top) current = section.getAttribute('id');
+  });
+  document.querySelectorAll('.nav-item > a').forEach(function(a) {
+    a.classList.remove('active');
+    const href = a.getAttribute('href');
+    if (href && href.substring(1) === current) a.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
