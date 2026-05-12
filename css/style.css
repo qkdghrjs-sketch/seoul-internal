@@ -393,15 +393,27 @@ img{max-width:100%;display:block}
 }
 
 /* ===== 콘텐츠 섹션 헤딩 ===== */
-.sec-heading{
+/* sub-main h3 기본 스타일(border-left, padding-left) 덮어쓰기 */
+.sub-main h3.sec-heading{
   font-size:1.15rem;font-weight:800;color:var(--primary-dark);
-  margin:40px 0 18px;padding-bottom:12px;
-  border-bottom:2px solid var(--gray-200);position:relative
+  margin:40px 0 18px;padding-bottom:12px;padding-left:0;
+  border-left:none;border-bottom:2px solid var(--gray-200);position:relative
 }
-.sec-heading::after{
+.sub-main h3.sec-heading::after{
   content:'';position:absolute;bottom:-2px;left:0;
   width:40px;height:2px;background:var(--primary)
 }
+
+/* ===== page-cta 내부: sub-main 하위 스타일 덮어쓰기 ===== */
+.sub-main .page-cta h3{
+  color:#fff;border-left:none;padding-left:0;
+  margin:0 0 10px;font-size:1.55rem;font-weight:800
+}
+.sub-main .page-cta p{
+  color:rgba(255,255,255,0.92);margin-bottom:28px;font-size:0.95rem
+}
+.sub-main .page-cta .cta-btn-white{color:var(--primary-dark)}
+.sub-main .page-cta .cta-btn-outline{color:#fff}
 
 /* ===== Why 서울내과 카드 ===== */
 .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:20px 0}
@@ -484,18 +496,4 @@ img{max-width:100%;display:block}
 .cta-btn-white{background:#fff;color:var(--primary-dark)}
 .cta-btn-white:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.18)}
 .cta-btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.5)}
-.cta-btn-outline:hover{border-color:#fff;background:rgba(255,255,255,0.12)}
-
-/* ===== 반응형 (신규 섹션) ===== */
-@media(max-width:768px){
-  .why-grid{grid-template-columns:1fr;gap:12px}
-  .page-cta{padding:36px 20px;border-radius:14px}
-  .page-cta h3{font-size:1.2rem}
-  .cta-btns{flex-direction:column;align-items:center}
-  .cta-btn{width:100%;max-width:300px;justify-content:center}
-}
-@media(max-width:480px){
-  .condition-tag{font-size:0.8rem;padding:6px 12px}
-  .faq-q{font-size:0.88rem;padding:14px 16px}
-  .faq-a{padding:0 16px 14px 50px;font-size:0.84rem}
-}
+.cta-btn-outline:hover{border-color:#ff
