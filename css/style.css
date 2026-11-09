@@ -496,4 +496,32 @@ img{max-width:100%;display:block}
 .cta-btn-white{background:#fff;color:var(--primary-dark)}
 .cta-btn-white:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.18)}
 .cta-btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.5)}
-.cta-btn-outline:hover{border-color:#ff
+.cta-btn-outline:hover{border-color:#fff}
+
+/* ===== 2026-11-09 PC 상단 한 줄: 로고 왼쪽 + 메뉴 오른쪽, 메뉴 글씨 크게 (원장님 카톡 요청) =====
+   960px 이하(휴대폰·태블릿)는 그대로 둔다. */
+@media (min-width:961px){
+  :root{--header-h:96px}
+  .header{display:flex;align-items:center;justify-content:space-between;height:96px;
+    padding:0 max(24px, calc((100% - 1320px) / 2))}
+  .header-row-top{padding:0;border-bottom:0;flex-shrink:0}
+  .logo img{height:68px;width:auto}
+  .header-row-bottom{margin:0;padding:0;height:96px;max-width:none}
+  .nav-list{height:100%}
+  .nav-item{height:100%;display:flex;align-items:center}
+  .nav-item>a{font-size:1.2rem;font-weight:700;padding:0 14px;line-height:96px;white-space:nowrap}
+  .nav-item>a::after{bottom:20px;height:3px}
+  .nav-divider{font-size:.95rem}
+  .dropdown{top:100%;min-width:190px}
+  .dropdown a{font-size:1rem;padding:12px 22px}
+  .slider{margin-top:96px}
+}
+@media (min-width:961px) and (max-width:1399px){
+  .nav-item>a{font-size:1.08rem;padding:0 11px}
+  .nav-divider{display:none}
+}
+@media (min-width:961px) and (max-width:1179px){
+  .header{padding:0 16px}
+  .logo img{height:54px}
+  .nav-item>a{font-size:.98rem;padding:0 7px}
+}
