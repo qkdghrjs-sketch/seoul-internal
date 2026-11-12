@@ -328,6 +328,9 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow-lg);
 }
 .doc-panel-photo img { width: 100%; height: 100%; object-fit: cover; }
+.doc-photo-wait{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--primary-bg);color:var(--primary);font-size:.78rem;font-weight:700;text-align:center;line-height:1.3}
+.doc-more{display:inline-block;margin-top:18px;font-size:.92rem;font-weight:700;color:var(--primary)}
+.doc-more:hover{text-decoration:underline}
 .doc-panel-info {}
 .doc-panel-name {
   font-size: 1.6rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 4px;
@@ -1195,31 +1198,38 @@ img { max-width: 100%; display: block; }
   <div class="container">
     <div class="doctors-header fade-in">
       <h2>의료진 소개</h2>
-      <p>서울내과의원의 전문 의료진을 소개합니다</p>
+      <p>서울내과의원 의료진을 소개합니다</p>
       <div class="bar"></div>
     </div>
     <!-- 의사 탭 버튼 -->
     <div class="doc-tabs fade-in">
       <div class="doc-tab active" onclick="selectDoctor(0)">
         <div class="doc-tab-photo">
-          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/f85376b28623c.png" alt="이재광 원장">
+          <img src="images/doctors/lee-jaegwang.jpg" alt="이재광 원장" loading="lazy">
         </div>
         <span class="doc-tab-name">이재광</span>
-        <span class="doc-tab-pos">대표원장</span>
+        <span class="doc-tab-pos">1내과 원장</span>
       </div>
       <div class="doc-tab" onclick="selectDoctor(1)">
         <div class="doc-tab-photo">
-          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/7f6abd2a3533f.png" alt="이주영 과장">
+          <img src="images/doctors/lee-juyoung.jpg" alt="이주영 과장" loading="lazy">
         </div>
         <span class="doc-tab-name">이주영</span>
-        <span class="doc-tab-pos">내과2 과장</span>
+        <span class="doc-tab-pos">2내과 과장</span>
       </div>
       <div class="doc-tab" onclick="selectDoctor(2)">
         <div class="doc-tab-photo">
-          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/2acb7336f72a5.png" alt="김송이 과장">
+          <img src="images/doctors/kim-songi.jpg" alt="김송이 과장" loading="lazy">
         </div>
         <span class="doc-tab-name">김송이</span>
-        <span class="doc-tab-pos">과장</span>
+        <span class="doc-tab-pos">3내과 과장</span>
+      </div>
+      <div class="doc-tab" onclick="selectDoctor(3)">
+        <div class="doc-tab-photo">
+          <div class="doc-photo-wait"><span>사진 준비 중</span></div>
+        </div>
+        <span class="doc-tab-name">김지수</span>
+        <span class="doc-tab-pos">4내과 과장</span>
       </div>
     </div>
     <!-- 상세 패널 -->
@@ -1227,58 +1237,50 @@ img { max-width: 100%; display: block; }
       <!-- 이재광 원장 -->
       <div class="doc-panel active" id="docPanel0">
         <div class="doc-panel-photo">
-          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/f85376b28623c.png" alt="이재광 원장">
+          <img src="images/doctors/lee-jaegwang.jpg" alt="이재광 원장" loading="lazy">
         </div>
         <div class="doc-panel-info">
           <div class="doc-panel-name">이재광</div>
-          <div class="doc-panel-pos">원장 (대표원장)</div>
+          <div class="doc-panel-pos">1내과 원장</div>
           <div class="doc-info-tabs">
-            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc0')">학력·경력</button>
-            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc0')">학회회원</button>
-            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc0')">학위</button>
+            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc0')">주요 약력</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc0')">자격·학회</button>
           </div>
           <div class="doc-info-contents" id="doc0">
             <div class="doc-info-content active">
               <ul>
                 <li>서울대학교 의과대학 졸업</li>
-                <li>인제대학교 서울백병원 인턴수료</li>
-                <li>인제대학교 서울백병원 내과레지던트 수료</li>
-                <li>제천 서울병원 내과과장 역임</li>
-                <li>구 덕산병원(오류동) 내과과장 역임</li>
-                <li>서안복음병원 내과과장 역임</li>
-                <li>현 서울내과 대표원장</li>
+                <li>서울대학교 대학원 의학박사 수료</li>
+                <li>인제대학교 서울백병원 외래교수</li>
+                <li>전 덕산병원 내과 과장</li>
+                <li>전 서안복음병원 내과 과장</li>
               </ul>
             </div>
             <div class="doc-info-content">
               <ul>
-                <li>대한 고혈압학회</li>
-                <li>대한 내분비학회</li>
-                <li>대한 소화기 내시경 학회</li>
-                <li>대한 의사 협회</li>
-              </ul>
-            </div>
-            <div class="doc-info-content">
-              <ul>
-                <li>서울대학교 의과대학 석사</li>
-                <li>"신증후 출혈열의 질병사적 고찰"</li>
-                <li>서울대학교 의과대학 박사 수료</li>
+                <li>대한내과학회 정회원</li>
+                <li>대한의사학회 정회원</li>
+                <li>한국과학사학회 정회원</li>
+                <li>대한소화기내시경학회 준회원</li>
+                <li>대한당뇨병학회 정회원</li>
+                <li>대한고혈압학회 정회원</li>
               </ul>
             </div>
           </div>
+          <a class="doc-more" href="about/doctors.html#dr-lee-jaegwang">진료 시간 보기 ›</a>
         </div>
       </div>
       <!-- 이주영 과장 -->
       <div class="doc-panel" id="docPanel1">
         <div class="doc-panel-photo">
-          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/7f6abd2a3533f.png" alt="이주영 과장">
+          <img src="images/doctors/lee-juyoung.jpg" alt="이주영 과장" loading="lazy">
         </div>
         <div class="doc-panel-info">
           <div class="doc-panel-name">이주영</div>
-          <div class="doc-panel-pos">내과2 과장</div>
+          <div class="doc-panel-pos">2내과 과장</div>
           <div class="doc-info-tabs">
-            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc1')">학력</button>
-            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc1')">경력</button>
-            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc1')">학회회원</button>
+            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc1')">주요 약력</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc1')">자격·학회</button>
           </div>
           <div class="doc-info-contents" id="doc1">
             <div class="doc-info-content active">
@@ -1287,42 +1289,39 @@ img { max-width: 100%; display: block; }
                 <li>성애병원 수련의 수료</li>
                 <li>성애병원 내과 전공의 수료</li>
                 <li>아주대병원 소화기내과 임상강사 수료</li>
+              </ul>
+            </div>
+            <div class="doc-info-content">
+              <ul>
                 <li>내과 전문의</li>
-              </ul>
-            </div>
-            <div class="doc-info-content">
-              <ul>
-                <li>제66회 대한소화기내시경학회 추계학술대회 우수연제상 수상</li>
-              </ul>
-            </div>
-            <div class="doc-info-content">
-              <ul>
+                <li>소화기내시경 세부 전문의</li>
                 <li>대한내과학회 평생회원</li>
                 <li>대한소화기학회 평생회원</li>
                 <li>대한소화기내시경학회 평생회원</li>
               </ul>
             </div>
           </div>
+          <a class="doc-more" href="about/doctors.html#dr-lee-juyoung">진료 시간 보기 ›</a>
         </div>
       </div>
       <!-- 김송이 과장 -->
       <div class="doc-panel" id="docPanel2">
         <div class="doc-panel-photo">
-          <img src="https://cdn.imweb.me/upload/S20260108b9005a7eb2710/2acb7336f72a5.png" alt="김송이 과장">
+          <img src="images/doctors/kim-songi.jpg" alt="김송이 과장" loading="lazy">
         </div>
         <div class="doc-panel-info">
           <div class="doc-panel-name">김송이</div>
-          <div class="doc-panel-pos">과장</div>
+          <div class="doc-panel-pos">3내과 과장</div>
           <div class="doc-info-tabs">
-            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc2')">학력</button>
-            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc2')">학회회원</button>
+            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc2')">주요 약력</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc2')">자격·학회</button>
           </div>
           <div class="doc-info-contents" id="doc2">
             <div class="doc-info-content active">
               <ul>
                 <li>연세대학교 의과대학 졸업</li>
-                <li>연세대학교 의과대학원 졸업</li>
-                <li>연세대학교 의과대학원 석사 수료</li>
+                <li>연세대학교 의학대학원 졸업</li>
+                <li>연세대학교 의학대학원 석사 수료</li>
                 <li>가톨릭 중앙의료원 인턴 수료</li>
                 <li>원주세브란스기독병원 내과 전공의 수료</li>
               </ul>
@@ -1335,6 +1334,40 @@ img { max-width: 100%; display: block; }
               </ul>
             </div>
           </div>
+          <a class="doc-more" href="about/doctors.html#dr-kim-songi">진료 시간 보기 ›</a>
+        </div>
+      </div>
+      <!-- 김지수 과장 -->
+      <div class="doc-panel" id="docPanel3">
+        <div class="doc-panel-photo">
+          <div class="doc-photo-wait"><span>사진 준비 중</span></div>
+        </div>
+        <div class="doc-panel-info">
+          <div class="doc-panel-name">김지수</div>
+          <div class="doc-panel-pos">4내과 과장</div>
+          <div class="doc-info-tabs">
+            <button class="doc-info-tab active" onclick="selectInfoTab(this, 'doc3')">주요 약력</button>
+            <button class="doc-info-tab" onclick="selectInfoTab(this, 'doc3')">자격·학회</button>
+          </div>
+          <div class="doc-info-contents" id="doc3">
+            <div class="doc-info-content active">
+              <ul>
+                <li>이화여자대학교 의학전문대학원 졸업</li>
+                <li>이화여자대학교 부속 목동병원 인턴</li>
+                <li>이화여자대학교 부속 목동병원 전공의</li>
+                <li>전 뉴고려병원 진료 과장</li>
+                <li>전 미즈메디병원 진료 과장</li>
+                <li>전 서울성모병원 NICU 진료 전문의</li>
+              </ul>
+            </div>
+            <div class="doc-info-content">
+              <ul>
+                <li>소아청소년과 전문의</li>
+                <li>소아응급의학과 세부전문의</li>
+              </ul>
+            </div>
+          </div>
+          <a class="doc-more" href="about/doctors.html#dr-kim-jisu">진료 시간 보기 ›</a>
         </div>
       </div>
     </div>
